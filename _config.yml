@@ -4,16 +4,16 @@
 
 # Site
 title: Lihq - Blog
-subtitle: ''
-description: ''
-keywords:
+subtitle: 'Lihq'
+description: 'Blog - Lihq 是一个个人博客，用户平时的日志记录，技术分享，个人学习，闲聊杂谈'
+keywords: 'Lihq1403,lihq,php,web,html.css,后端,技术,blog,博客,框架,算法'
 author: Lihq
 language: zh-CN
-timezone: ''
+timezone: 'Asia/Shanghai'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://blog.lihq.xyz
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
