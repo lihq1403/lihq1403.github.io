@@ -97,6 +97,6 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: 'git'
-  repo: git@github.com:lihq1403/lihq1403.github.io.git
+  type: git
+  repo: https://gh_token@github.com/lihq1403/lihq1403.github.io.git
   branch: master
