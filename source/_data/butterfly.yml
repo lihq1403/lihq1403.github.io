@@ -93,7 +93,7 @@ katex:
 
 ####   Analysis    ####
 # ---------------
-# baidu_analytics:
+baidu_analytics: f019d76492b1609705ace48062327af9
 
 #Google Analytics
 google_analytics:
@@ -316,7 +316,7 @@ tag_ui: # 留空或index
 background:
 
 # footer是否顯示圖片背景(與top_img一致)
-footer_bg: false
+footer_bg: true
 
 # 背景特效
 # 避免卡頓，建議只開啓一個
