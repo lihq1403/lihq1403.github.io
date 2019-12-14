@@ -1,5 +1,5 @@
 ---
-cover: 縮略圖
+cover: https://image.lihq.xyz/imgs/2019/12/1d7d382136af14db.jpg
 title: 小破站迁移辛酸史
 date: 2019-12-14 21:53
 tags:
