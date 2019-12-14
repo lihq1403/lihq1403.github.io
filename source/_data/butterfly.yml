@@ -258,9 +258,9 @@ Flink:
   info_headline: 我的Blog资料
   name: Blog 名字： Lihq
   address: Blog 地址： https://blog.lhq.xyz/
-  avatar: Blog 头像： https://jerryc.me/img/avatar.png
-  info: Blog 简介： 今日事,今日畢
-  comment: 如果需要交換友鏈,請留言
+  avatar: Blog 头像： https://blog.lhq.xyz/img/avatar.png
+  info: Blog 简介： 相聚有时，后会无期
+  comment: sometimes ever, sometimes never
 
 # 打賞按鈕
 reward:
@@ -420,11 +420,11 @@ subtitle:
   # source: 3  調用一句网（簡體） http://yijuzhan.com/
   # source: 4  調用今日詩詞（簡體） https://www.jinrishici.com/
   # subtitle 會先顯示 source , 再顯示 sub 的内容
-  source: false
+  source: 2
   # (如果有英文逗號' , '，請使用轉義字符 &#44;)
   sub:
-    - 今日事&#44;今日畢
-    - Never put off till tomorrow what you can do today
+    - 相聚有时&#44;后会无期
+    - Sometimes Ever&#44;Sometimes Never
 
 
 ####    側邊欄    ####
