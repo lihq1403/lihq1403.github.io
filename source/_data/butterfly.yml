@@ -5,15 +5,16 @@
 # xxx || icon:
 #   xxx || 連結 || icon
 menu:
-  Home: / || fa fa-home
-  Archives: /archives/ || fa fa-archive
-  Tags: /tags/ || fa fa-tags
-  Categories: /categories/ || fa fa-folder-open
-  Link: /link/ || fa fa-link
-  About: /about/ || fa fa-heart
-  List||fa fa-list:
-    - Music || /music/ || fa fa-music
-    - Movie || /movies/ || fa fa-film
+  首页: / || fa fa-home
+  时间轴: /archives/ || fa fa-archive
+  标签: /tags/ || fa fa-tags
+  分类: /categories/ || fa fa-folder-open
+#  Link: /link/ || fa fa-link
+  关于我: /about/ || fa fa-heart
+  其他||fa fa-list:
+    - 音乐 || /music/ || fa fa-music
+    - 工具箱 || /tools/ || fas fa-toolbox
+#    - Movie || /movies/ || fa fa-film
 
 # Favicon
 # ---------------
@@ -34,7 +35,7 @@ favicon: /img/favicon.ico
 # Highlight theme
 # ---------------
 highlight_theme: darker # default, light, darker, pale night, ocean
-highlight_copy: true #代碼複製按鈕
+highlight_copy: false #代碼複製按鈕
 highlight_lang: true #代碼語言顯示
 highlight_shrink: false #代碼框不展開，需點擊 '>' 打開
 
@@ -73,7 +74,7 @@ algolia_search:
 # Please see doc for more details: https://jerryc.me/posts/21cfbf15/#本地搜索
 # ---------------
 local_search:
-  enable: false
+  enable: true
   labels:
     input_placeholder: Search for Posts
     hits_empty: "We didn't find any results for the search: ${query}" # if there are no result
@@ -104,7 +105,7 @@ google_analytics:
 avatar: https://image.lihq.xyz/imgs/2019/12/ce927937829f33d8.jpg
 
 # the banner image of index
-top_img: https://i.loli.net/2019/05/22/5ce53eb6dc82757840.jpg
+top_img: https://image.lihq.xyz/imgs/2019/12/5030dcb94ab5da58.jpeg
 # 以下鏈接是動態壁紙，每次刷新會更換
 # https://source.unsplash.com/collection/collectionid/1600x900
 # https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture
@@ -112,19 +113,19 @@ top_img: https://i.loli.net/2019/05/22/5ce53eb6dc82757840.jpg
 # https://api.dujin.org/bing/1366.php
 
 # if the banner of page not setting,it will show the top_img
-default_top_img: https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/top_img_index.jpg
+default_top_img: https://image.lihq.xyz/imgs/2019/12/5030dcb94ab5da58.jpeg
 
 # the default cover of the post
 default_cover: https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png
 
 # the banner image of archive page
-archive_img: https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/archive.jpg
+archive_img: https://image.lihq.xyz/imgs/2019/12/b5f892606d18c432.jpg
 
 # the banner image of tag page
-tag_img: https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/tag-bg.png
+tag_img: https://image.lihq.xyz/imgs/2019/12/6ed21faed131a4d1.jpg
 
 # the banner image of category page
-category_img: https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/category-bg
+category_img: https://image.lihq.xyz/imgs/2019/12/b0e0684bf7b2b052.jpg
 
 # 如果你有使用hexo-douban去生成movie界面，可配置這個
 movies_img: https://cdn.jsdelivr.net/gh/jerryc127/CDN/Photo/movie.jpg
@@ -506,8 +507,8 @@ medium_zoom:
 # position 彈窗位置
 # 可選 top-left / top-center / top-right / bottom-left / bottom-center / bottom-right
 snackbar:
-  enable: false
-  position: bottom-left
+  enable: true
+  position: top-center
   bg_light: '#49b1f5' #light mode時彈窗背景
   bg_dark: '#2d3035' #dark mode時彈窗背景
 
