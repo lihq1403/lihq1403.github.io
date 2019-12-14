@@ -9,7 +9,7 @@ menu:
   Archives: /archives/ || fa fa-archive
   Tags: /tags/ || fa fa-tags
   Categories: /categories/ || fa fa-folder-open
-#  Link: /link/ || fa fa-link
+  Link: /link/ || fa fa-link
   About: /about/ || fa fa-heart
   List||fa fa-list:
     - Music || /music/ || fa fa-music
@@ -101,7 +101,7 @@ google_analytics:
 # Post info settings
 # ---------------
 # avatar: /img/avatar.png
-avatar: https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/avatar.png
+avatar: https://image.lihq.xyz/imgs/2019/12/ce927937829f33d8.jpg
 
 # the banner image of index
 top_img: https://i.loli.net/2019/05/22/5ce53eb6dc82757840.jpg
@@ -193,17 +193,17 @@ disqus:
 # enable: false
 # uid:
 
-# gitalk:
-#   enable: false
-#   client_id:
-#   client_secret:
-#   repo:
-#   owner:
-#   admin:
-#   language:   # en , zh-CN , zh-TW
-####   Using this js for redirect to gitalk container after login
-####   See https://github.com/gitalk/gitalk/issues/125
-#   js: https://cdn.jsdelivr.net/gh/upupming/gitalk@36368e5dffd049e956cdbbd751ff96c28d8255cf/dist/gitalk.min.js
+gitalk:
+ enable: true
+ client_id: 60c6f77248061e1b2d42
+ client_secret: 43652c3d2a62a639e679efaf12d176a7e70a6e45
+ repo: lihq1403.github.io
+ owner: lihq1403
+ admin: lihq1403
+ language: zh-CN  # en , zh-CN , zh-TW
+###   Using this js for redirect to gitalk container after login
+###   See https://github.com/gitalk/gitalk/issues/125
+ js: https://cdn.jsdelivr.net/gh/upupming/gitalk@36368e5dffd049e956cdbbd751ff96c28d8255cf/dist/gitalk.min.js
 
 # valine comment system. https://valine.js.org
 valine:
@@ -440,7 +440,7 @@ aside:
   card_categories: true
   card_tags: true
   card_archives: true
-  card_webinfo: false
+  card_webinfo: true
 
 # 網站公告
 announcement:
@@ -449,8 +449,8 @@ announcement:
 # busuanzi count for PV / UV in site
 # 訪問人數
 busuanzi:
-  site_uv: true
-  site_pv: true
+  site_uv: false
+  site_pv: false
   page_pv: true
 
 # 網頁開通時間
@@ -472,7 +472,7 @@ translate:
   #延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
   translateDelay: 0
   #博客网址
-  cookieDomain: "https://xxx/"
+  cookieDomain: "https://blog.lihq.xyz/"
   #當文字是簡體時，按鈕顯示的文字
   msgToTraditionalChinese: "繁"
   #當文字是繁體時，按鈕顯示的文字

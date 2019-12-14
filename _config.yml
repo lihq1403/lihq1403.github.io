@@ -5,7 +5,7 @@
 # Site
 title: Lihq - Blog
 subtitle: 'Lihq'
-description: 'Blog - Lihq 是一个个人博客，用户平时的日志记录，技术分享，个人学习，闲聊杂谈'
+description: '平时的日志记录，技术分享，个人学习，闲聊杂谈'
 keywords: 'Lihq1403,lihq,php,web,html.css,后端,技术,blog,博客,框架,算法'
 author: Lihq
 language: zh-CN
@@ -31,7 +31,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :year-:month-:day-:title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link:
