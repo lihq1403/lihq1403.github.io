@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/83cd646b0527f634.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/f9a0d83eab0c3.jpg
 title: Docker实践之应用篇 - MailHog
 date: 2019-10-12 10:18
 tags:
@@ -10,12 +10,13 @@ categories:
 keywords:
 description:
 ---
+
 # Docker实践之应用篇 - MailHog
 
 
 ## MailHog 介绍
 
-![](https://image.lihq.xyz/imgs/2019/10/901b69f9be24d19d.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/8ef163508cfe1.png)
 
 > 引用[mailhog/MailHog](https://github.com/mailhog/MailHog)的介绍：Web and API based SMTP testing
 
@@ -28,14 +29,14 @@ docker run --name mailhog -p 1025:1025 -p 8025:8025 -d mailhog/mailhog
 其中1025 是发邮件用的端口，8025 是 Web 界面用的端口
 
 运行之后看到下面的结果就代表成功了，是不是很简单 -.-!
-![](https://image.lihq.xyz/imgs/2019/10/1e16102c65066934.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/0dda99bfd5c22.png)
 
 ## 查看web页面
 因为我是虚拟机环境，配置了虚拟网络，所以访问地址是http://192.168.56.10:8025
 
 访问ip地址要根据自己的环境来切换哦，别照搬
 
-![](https://image.lihq.xyz/imgs/2019/10/924ab46c3c5d3ba8.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/ea6a2d4084516.png)
 
 ## 测试一下
 
@@ -59,9 +60,9 @@ Some content!
 EOF
 ```
 
-![](https://image.lihq.xyz/imgs/2019/10/211367dfa26d7766.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/26e904d7e71d4.png)
 
-![](https://image.lihq.xyz/imgs/2019/10/f10267917917547b.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/1524e0539aae5.png)
 
 可以通过web页面看到我们已经发送成功了
 

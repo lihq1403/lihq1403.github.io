@@ -3,7 +3,7 @@ comments: false
 title: MUSIC
 date:
 description:
-top_img: https://image.lihq.xyz/imgs/2019/12/3e82a93036a7a05c.jpeg
+top_img: https://blog-1256184194.file.myqcloud.com/2019/12/23/78dd3c2025cd2.jpeg
 ---
 
 # 嗨起来 好吗

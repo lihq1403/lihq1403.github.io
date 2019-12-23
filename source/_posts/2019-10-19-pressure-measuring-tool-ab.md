@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/7681faa0cf791452.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/98ca616a8cf05.jpg
 title: 压测工具 - ab
 date: 2019-10-19 11:22
 tags:

@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/5c60740a5c1b0389.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/fd350e4b7cce4.jpg
 copyright: false
 title: 【转载】关于PHP程序员技术职业生涯规划
 date: 2019-10-13 16:54

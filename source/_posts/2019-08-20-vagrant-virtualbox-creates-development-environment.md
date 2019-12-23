@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/b79fbd1e8b632c33.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg
 title: Vagrant +Virtualbox 打造跨平台开发环境
 date: 2019-08-20 17:54
 tags:
@@ -292,7 +292,7 @@ Time consumed: 2 Minute!
 ```
 > 原来只花了俩分钟，666。接下来，在浏览器上访问这个地址就好了，因为是虚拟机的原因，那个ip地址是不对的，我这里是http://192.168.56.10:8888/0dafbc37。输入账号密码，熟悉的画面
 
-![image](http://mine.lihq.xyz/image/201908/20/vagrant_20190820170611.pngvagrant_20190820170611.png)
+![image](https://blog-1256184194.file.myqcloud.com/2019/12/23/a6f2d3e1b364f.png)
 
 > 才发现，原来默认的内存这么小，不行，要调大一点 （因为会不能安装mysql的）
 

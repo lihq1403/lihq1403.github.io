@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/cddeb0bea680bf81.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/b64981538feea.jpg
 copyright: false
 title: 【转载】Github 的 Restful HTTP API 设计分解
 date: 2019-08-26 16:17

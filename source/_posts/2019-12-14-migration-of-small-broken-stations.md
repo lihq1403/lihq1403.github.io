@@ -1,5 +1,5 @@
 ---
-cover: https://image.lihq.xyz/imgs/2019/12/1d7d382136af14db.jpg
+cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/48e6101ba63f8.jpg
 title: 小破站迁移辛酸史
 date: 2019-12-14 21:53
 tags:
@@ -48,10 +48,10 @@ description:
 
 > 果然很完美，我的小水管挺住
 
-![](https://image.lihq.xyz/imgs/2019/12/e97e96f688b08eba.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/c949b4c8c0542.png)
 
 ## 博客
 
 > 确实漂亮，没的说
 
-![](https://image.lihq.xyz/imgs/2019/12/adeed6272807a7b1.png)
+![](https://blog-1256184194.file.myqcloud.com/2019/12/23/ec8fa1b1f6ee4.png)

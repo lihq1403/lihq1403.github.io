@@ -1,7 +1,7 @@
 ---
 title: 关于我
 comments: true
-top_img: https://image.lihq.xyz/imgs/2019/12/c864f6882b30bef0.jpg
+top_img: https://blog-1256184194.file.myqcloud.com/2019/12/23/0f744ff8d731c.jpg
 ---
 
 我？？？
