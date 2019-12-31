@@ -189,3 +189,6 @@ $rbac = new Rbac();
 ## 具体方法
 
 请参考```Lihq1403\ThinkRbac\lib\RBACLib```和```Lihq1403\ThinkRbac\Rbac```
+
+# 源码地址
+{% githubCard user:lihq1403 repo:think-rbac width:100% height:200 theme:default %}
