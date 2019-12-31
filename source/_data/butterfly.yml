@@ -96,7 +96,10 @@ katex:
 baidu_analytics: f019d76492b1609705ace48062327af9
 
 #Google Analytics
-google_analytics:
+google_analytics: UA-155204084-1
+
+# Tencent_analytics ID
+tencent_analytics: 66506149
 
 
 # Post info settings
@@ -235,6 +238,15 @@ ICP:
   text: 粤ICP备19004202号-1
   icon: /img/icp.png
 
+# Ads
+# ---------------
+# Google Adsense
+google_adsense:
+  enable: false
+  js: https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+  client: ca-pub-3686496194287784
+  enable_page_level_ads: true
+
 ####    站長驗證    ####
 # Google Webmaster tools verification setting
 # See: https://www.google.com/webmasters/
@@ -301,6 +313,11 @@ related_post:
 # 使用默認, 都無需填寫（建議默認）
 index_site_info_top: #主頁標題距離頂部距離  例如 300px/300em/300rem/10%
 index_top_img_height: #主頁top_img高度 例如 300px/300em/300rem  不能使用百分比
+
+# 主頁文章COVER顯示位置
+# 三個值可配置 left , right , both
+# left(全部圖片顯示在左邊)，right(全部圖片顯示在右邊)，both(左右左右順序顯示)
+index_post_cover: left
 
 # category和tag頁的UI設置
 # index 值代表 UI將與首頁的UI一樣
@@ -500,6 +517,10 @@ autoChangeMode: false
 # 默認為 fancybox http://fancyapps.com/fancybox/3/
 # 可以選擇改爲 medium_zoom https://github.com/francoischalifour/medium-zoom
 medium_zoom:
+  enable: false
+
+# fancybox http://fancyapps.com/fancybox/3/
+fancybox:
   enable: true
 
 # Snackbar 彈窗
@@ -582,12 +603,12 @@ CDN:
 
   # share
   addtoany: https://static.addtoany.com/menu/page.js
-  sharejs: https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js
-  sharejs_css: https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css
+  sharejs: https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js
+  sharejs_css: https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css
 
   #search
-  algolia_search: https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js
-  algolia_search_css: https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css
+  algolia_search: https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js
+  algolia_search_css: https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css
   algolia_js: /js/search/algolia.js
   local_search: /js/search/local-search.js
 
@@ -600,9 +621,9 @@ CDN:
   busuanzi: //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
 
   # 背景特效
-  canvas_ribbon: /js/third-party/canvas-ribbon.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/canvas-ribbon.js
-  canvas_ribbon_piao: /js/third-party/piao.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/piao.js
-  canvas_nest: /js/third-party/canvas-nest.js  # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/canvas-nest.js 
+  canvas_ribbon: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/canvas-ribbon.js
+  canvas_ribbon_piao: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js
+  canvas_nest: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/canvas-nest.js
 
   lazyload: https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js
   instantpage: https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js
@@ -618,11 +639,11 @@ CDN:
   snackbar: https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js
 
   #鼠标点击特效
-  anime: https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js  #/js/third-party/anime.min.js
-  activate_power_mode: /js/third-party/activate-power-mode.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/activate-power-mode.js
-  fireworks: /js/third-party/fireworks.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/fireworks.js
-  click_heart: /js/third-party/click_heart.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/click_heart.js
-  ClickShowText: /js/third-party/ClickShowText.js # https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@latest/js/ClickShowText.js
+  anime: https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js
+  activate_power_mode: https://cdn.jsdelivr.net/npm/activate-power-mode/dist/activate-power-mode.min.js
+  fireworks: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/fireworks.js
+  click_heart: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/click_heart.js
+  ClickShowText: https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/ClickShowText.js
 
   translate: /js/tw_cn.js
   runtimeshow: js/runtimeshow.js
