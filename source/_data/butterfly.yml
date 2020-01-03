@@ -242,7 +242,7 @@ ICP:
 # ---------------
 # Google Adsense
 google_adsense:
-  enable: false
+  enable: true
   js: https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   client: ca-pub-3686496194287784
   enable_page_level_ads: true
