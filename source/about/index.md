@@ -16,4 +16,4 @@ top_img: https://blog-1256184194.file.myqcloud.com/2019/12/23/0f744ff8d731c.jpg
 
 
   [1]: https://www.processon.com/view/596700d6e4b043caf880b819
-  [2]: https://blog.lihq.xyz/archives/reprint-about-the-technical-career-planning-of-php-programmers.html
+  [2]: https://blog.lihq.xyz/2019/10/13/reprint-about-the-technical-career-planning-of-php-programmers/
