@@ -1,5 +1,5 @@
 ---
-comments: false
+copyright: false
 cover: https://blog-1256184194.file.myqcloud.com/2020/01/03/adf9516baec2e.jpg
 title: 【转载】Composer 图文安装教程
 date: 2020-01-03 13:58 
