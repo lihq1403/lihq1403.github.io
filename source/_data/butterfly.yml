@@ -234,15 +234,15 @@ footer_copyright:
 
 ICP:
   enable: true
-  url: http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action
-  text: 粤ICP备19004202号-1
+  url: http://www.beian.miit.gov.cn
+  text: 粤ICP备19004202号
   icon: /img/icp.png
 
 # Ads
 # ---------------
 # Google Adsense
 google_adsense:
-  enable: true
+  enable: false
   js: https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   client: ca-pub-3686496194287784
   enable_page_level_ads: true
