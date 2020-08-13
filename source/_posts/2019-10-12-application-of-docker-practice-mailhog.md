@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/f9a0d83eab0c3.jpg
 title: Docker实践之应用篇 - MailHog
 date: 2019-10-12 10:18

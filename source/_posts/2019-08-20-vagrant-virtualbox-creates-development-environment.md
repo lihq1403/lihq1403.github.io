@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg
 title: Vagrant +Virtualbox 打造跨平台开发环境
 date: 2019-08-20 17:54

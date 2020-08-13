@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/beaca7229d9c5.jpg
 title: 这个人很懒
 date: 2019-06-28 18:11 

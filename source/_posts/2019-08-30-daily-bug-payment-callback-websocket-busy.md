@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/985fb58045930.jpg
 title: 【BUG修复日记】之支付回调websocket busy
 date: 2019-08-30 09:59

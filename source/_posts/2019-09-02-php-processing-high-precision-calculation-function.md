@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/2e1326fc35fd8.jpg
 title: php 处理高精度计算函数
 date: 2019-09-02 16:02

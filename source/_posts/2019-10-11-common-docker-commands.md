@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/d0111cb9fbc25.jpg
 title: Docker 常用命令
 date: 2019-10-11 09:35

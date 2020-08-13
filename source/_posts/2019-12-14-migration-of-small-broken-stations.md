@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/48e6101ba63f8.jpg
 title: 小破站迁移辛酸史
 date: 2019-12-14 21:53

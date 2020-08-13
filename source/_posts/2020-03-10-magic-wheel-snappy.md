@@ -1,5 +1,5 @@
 ---
-copyright: false
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2020/03/10/e92f1132824c7.jpg
 title: 神奇的轮子之 - snappy
 date: 2020-03-10 17:31 

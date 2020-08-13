@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/731643384dfb6.jpg
 title: think-rbac
 date: 2019-07-12 14:56

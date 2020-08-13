@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/27/590c427344948.jpg
 title: think-rbac for thinkphp6.0
 date: 2019-12-27 20:46

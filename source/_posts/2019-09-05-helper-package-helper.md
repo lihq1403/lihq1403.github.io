@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/47b2a80b8ff02.jpg
 title: 【自己动手】助手函数包 helper
 date: 2019-09-05 15:32

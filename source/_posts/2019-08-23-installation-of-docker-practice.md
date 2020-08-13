@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/d874fd89e8e4c.png
 title: Docker实践之安装篇
 date: 2019-08-23 19:53

@@ -1,5 +1,5 @@
 ---
-copyright: false
+copyright: true
 cover: https://media-1256184194.file.myqcloud.com/image/bing/2020-05-07-5eb3d1968cd06.jpg
 title: PHP 扩展包开发流程
 date: 2020-05-09 17:51 

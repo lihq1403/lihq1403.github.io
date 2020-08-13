@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/25/7e3c3530e1a49.jpg
 title: 使用 satis 搭建一个私有的 Composer 包仓库
 date: 2019-12-25 23:53

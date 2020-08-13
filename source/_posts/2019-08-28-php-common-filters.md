@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/db11f1e28564d.jpg
 title: PHP 常用过滤器
 date: 2019-08-28 16:16

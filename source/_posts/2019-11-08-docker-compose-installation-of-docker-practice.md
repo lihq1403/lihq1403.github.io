@@ -1,4 +1,5 @@
 ---
+copyright: true
 cover: https://blog-1256184194.file.myqcloud.com/2019/12/23/7809429dc611c.jpg
 title: Docker实践之Docker-Compose安装
 date: 2019-11-08 15:52
