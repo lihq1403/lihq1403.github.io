@@ -96,10 +96,10 @@ katex:
 baidu_analytics: f019d76492b1609705ace48062327af9
 
 #Google Analytics
-google_analytics: UA-155204084-1
+google_analytics:
 
 # Tencent_analytics ID
-tencent_analytics: 66506149
+tencent_analytics:
 
 
 # Post info settings
@@ -584,7 +584,7 @@ CDN_USE:
   css:
     - /css/index.css
     - https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
-    - https://use.fontawesome.com/releases/v5.8.1/css/all.css #fontawesomeV5_css
+    - https://cdn.staticfile.org/font-awesome/5.8.1/css/all.css #fontawesomeV5_css
 
   js:
     - https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js  #/js/third-party/jquery.min.js
