@@ -1,3 +1,4 @@
 [submodule "themes/Butterfly"]
 	path = themes/Butterfly
 	url = https://github.com/lihq1403/hexo-theme-butterfly.git
+	branch = master
