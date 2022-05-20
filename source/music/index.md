@@ -1,4 +1,5 @@
 ---
+aplayer: true
 comments: false
 title: MUSIC
 date:

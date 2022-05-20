@@ -7,9 +7,9 @@ menu:
    归档: /archives/ || fas fa-archive
    标签: /tags/ || fas fa-tags
    分类: /categories/ || fas fa-folder-open
-   生活||fas fa-list:
-     Music: /music/ || fas fa-music
-     Movie: /tools/ || fas fa-video
+#   生活||fas fa-list:
+#     音乐: /music/ || fas fa-music
+#     影视: /tools/ || fas fa-video
 #   Link: /link/ || fas fa-link
    关于我: /about/ || fas fa-heart
 
@@ -667,8 +667,8 @@ aside:
 # busuanzi count for PV / UV in site
 # 訪問人數
 busuanzi:
-  site_uv: true
-  site_pv: true
+  site_uv: false
+  site_pv: false
   page_pv: true
 
 # Time difference between publish date and now (網頁運行時間)
