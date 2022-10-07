@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.lihq.xyz/"/>
-  <updated>2022-07-14T16:08:38.769Z</updated>
+  <updated>2022-10-07T15:16:46.806Z</updated>
   <id>https://blog.lihq.xyz/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>国庆</title>
+    <link href="https://blog.lihq.xyz/2022/10/07/national-day/"/>
+    <id>https://blog.lihq.xyz/2022/10/07/national-day/</id>
+    <published>2022-10-07T15:00:00.000Z</published>
+    <updated>2022-10-07T15:16:46.806Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="2022-10-08"><a href="#2022-10-08" class="headerlink" title="2022.10.08"></a>2022.10.08</h1><blockquote><p>知不可乎骤得<br>托遗响于悲风</p></blockquote><p>今年的最后一个假期的最后一天啦<br>见了一些老朋友<br>不变的是大多数<br>变化的还是有不甘<br>时间过得越来越快<br>一生能得到和想拥有的东西太多了<br>而真正得到的又太少了<br>有些人和事错过了就是永远<br>可能多年以后回首<br>那些人和事都会在斑斓的岁月里变得模糊</p><h2 id="Get"><a href="#Get" class="headerlink" title="Get"></a>Get</h2><p>国庆七天<br>总的来说<br>还是开心多于遗憾<br>本来想做一些事<br>但放弃了<br>也做成了另外的事<br>还算不错</p><h2 id="Work"><a href="#Work" class="headerlink" title="Work"></a>Work</h2><p>接下来<br>连上七天班<br>哭死<br>感觉现在有点舒适圈了<br>这样不行呀<br>要努力</p><h2 id="Blog"><a href="#Blog" class="headerlink" title="Blog"></a>Blog</h2><p>好久好久<br>没有认真学习了<br>看着上一篇博文还是7月<br>本来这几天想写一个的<br>但还没写完<br>加油吧<br>活到老学到老<br>感觉现在自己有点颓废了</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
+      
+    
+    </summary>
+    
+    
+      <category term="闲聊" scheme="https://blog.lihq.xyz/categories/%E9%97%B2%E8%81%8A/"/>
+    
+    
+      <category term="life" scheme="https://blog.lihq.xyz/tags/life/"/>
+    
+  </entry>
   
   <entry>
     <title>hyperf/box 尝尝鲜</title>
@@ -522,32 +548,6 @@
     
     
       <category term="tools" scheme="https://blog.lihq.xyz/tags/tools/"/>
-    
-      <category term="docker" scheme="https://blog.lihq.xyz/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Docker 常用命令</title>
-    <link href="https://blog.lihq.xyz/2019/10/11/common-docker-commands/"/>
-    <id>https://blog.lihq.xyz/2019/10/11/common-docker-commands/</id>
-    <published>2019-10-11T01:35:00.000Z</published>
-    <updated>2022-05-21T00:53:09.215Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="Docker-常用命令"><a href="#Docker-常用命令" class="headerlink" title="Docker 常用命令"></a>Docker 常用命令</h1><h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker images           # 列出所有镜像(images)</span><br><span class="line">docker ps               # 列出正在运行的容器(containers)</span><br><span class="line">docker ps -a            # 列出所有的容器</span><br><span class="line">docker pull centos      # 下载centos镜像</span><br><span class="line">docker top &lt;container&gt;  # 查看容器内部运行程序</span><br></pre></td></tr></table></figure><h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker stop &lt;container&gt;                  # 停止一个正在运行的容器，&lt;container&gt;可以是容器ID或名称</span><br><span class="line">docker start &lt;container&gt;                 # 启动一个已经停止的容器</span><br><span class="line">docker restart &lt;container&gt;               # 重启容器</span><br><span class="line">docker rm &lt;container&gt;                    # 删除容器</span><br><span class="line"></span><br><span class="line">docker run -i -t -p :80 LAMP /bin/bash   # 运行容器并做http端口转发</span><br><span class="line">docker exec -it &lt;container&gt; /bin/bash    # 进入ubuntu类容器的bash</span><br><span class="line">docker exec -it &lt;container&gt; /bin/sh      # 进入alpine类容器的sh</span><br><span class="line"></span><br><span class="line">docker rm `docker ps -a -q`              # 删除所有已经停止的容器</span><br><span class="line">docker kill $(docker ps -a -q)           # 杀死所有正在运行的容器，$()功能同``</span><br></pre></td></tr></table></figure><h2 id="提交-导出"><a href="#提交-导出" class="headerlink" title="提交/导出"></a>提交/导出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker build --rm=true -t hjue/lamp .    # 建立映像文件。–rm 选项是告诉Docker，在构建完成后删除临时的Container，Dockerfile的每一行指令都会创建一个临时的Container，一般这些临时生成的Container是不需要的</span><br><span class="line">docker commit 3a09b2588478 mynewimage    # 提交你的变更，并且把容器保存成镜像，命名为mynewimage，3a09b2588478为容器的ID</span><br><span class="line"></span><br><span class="line">docker save mynewimage | bzip2 -9 -c&gt; /home/save.tar.bz2  # 把 mynewimage 镜像保存成 tar 文件</span><br><span class="line">bzip2 -d -c &lt; /home/save.tar.bz2 | docker load            # 加载 mynewimage 镜像</span><br><span class="line"></span><br><span class="line">docker export &lt;CONTAINER ID&gt; &gt; /home/export.tar           # 导出Image</span><br><span class="line">cat /home/export.tar | sudo docker import - mynewimage    # 导入Image镜像</span><br></pre></td></tr></table></figure><h2 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -i -t centos /bin/bash          # 运行centos镜像</span><br><span class="line">docker run -d -p 80:80 hjue/centos-lamp    # 运行centos-lamp镜像</span><br><span class="line"></span><br><span class="line">docker rmi [image-id]                      # 删除镜像</span><br><span class="line">docker rmi $(docker images -q)             # 删除所有镜像</span><br></pre></td></tr></table></figure><h2 id="帮助"><a href="#帮助" class="headerlink" title="帮助"></a>帮助</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --help</span><br></pre></td></tr></table></figure><h2 id="批量操作"><a href="#批量操作" class="headerlink" title="批量操作"></a>批量操作</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker stop $(docker ps -a -q)                                         # 停止所有</span><br><span class="line">docker kill $(docker ps -a -q)                                         # 杀死所有正在运行的容器</span><br><span class="line">docker rm $(docker ps -a -q)                                           # 删除所有已经停止的容器</span><br><span class="line">docker rmi $(docker images -q -f dangling=true)                        # 删除所有未打 dangling 标签的镜像</span><br><span class="line">docker rmi $(docker images -q)                                         # 删除所有镜像</span><br><span class="line">docker rmi --force $(docker images | grep doss-api | awk &#x27;&#123;print $3&#125;&#x27;) # 强制删除镜像名称中包含“doss-api”的镜像</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
-      
-    
-    </summary>
-    
-    
-      <category term="分享" scheme="https://blog.lihq.xyz/categories/%E5%88%86%E4%BA%AB/"/>
-    
     
       <category term="docker" scheme="https://blog.lihq.xyz/tags/docker/"/>
     
