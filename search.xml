@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>看看yield</title>
+      <link href="/2022/10/27/look-yield/"/>
+      <url>/2022/10/27/look-yield/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="看看yield"><a href="#看看yield" class="headerlink" title="看看yield"></a>看看yield</h1><h2 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h2><p>在看hyperf源码时，发现了一个 CoordinatorManager::until(Constants::WORKER_START)-&gt;yield();</p><p>突然想到yield</p><p>很早之前就听说过这玩意，一直没咋去认真看看，印象只停留在foreach的内存优化上</p><p>看了一些文章，还是有些懵懵懂懂的，希望以后真的吃透后再写个自己的理解吧</p><h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><blockquote><p>个人认为不错的文章</p></blockquote><ul><li><a href="https://learnku.com/articles/45033">PHP yield 协程 生成器用法探究 (一)</a></li><li><a href="https://learnku.com/articles/46368">PHP yield from 生成器用法探究 (二)</a></li><li><a href="https://learnku.com/articles/46508">PHP yield 高级用法—同步编码，异步执行</a></li><li><a href="https://www.laruence.com/2015/05/28/3038.html">在PHP中使用协程实现多任务调度</a></li><li><a href="https://learnku.com/laravel/t/1442/php-using-yield-to-achieve-asynchronous-web-server">PHP用yield实现异步Webserver</a></li></ul><h2 id="嘻嘻"><a href="#嘻嘻" class="headerlink" title="嘻嘻"></a>嘻嘻</h2><p>最近心情不行，偷个懒</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分享 </category>
+          
+          <category> 转载 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> php </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>国庆</title>
       <link href="/2022/10/07/202210-national-day/"/>
       <url>/2022/10/07/202210-national-day/</url>

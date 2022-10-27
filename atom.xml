@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.lihq.xyz/"/>
-  <updated>2022-10-07T15:20:48.119Z</updated>
+  <updated>2022-10-27T14:54:07.914Z</updated>
   <id>https://blog.lihq.xyz/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>看看yield</title>
+    <link href="https://blog.lihq.xyz/2022/10/27/look-yield/"/>
+    <id>https://blog.lihq.xyz/2022/10/27/look-yield/</id>
+    <published>2022-10-27T15:00:00.000Z</published>
+    <updated>2022-10-27T14:54:07.914Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="看看yield"><a href="#看看yield" class="headerlink" title="看看yield"></a>看看yield</h1><h2 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h2><p>在看hyperf源码时，发现了一个 CoordinatorManager::until(Constants::WORKER_START)-&gt;yield();</p><p>突然想到yield</p><p>很早之前就听说过这玩意，一直没咋去认真看看，印象只停留在foreach的内存优化上</p><p>看了一些文章，还是有些懵懵懂懂的，希望以后真的吃透后再写个自己的理解吧</p><h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><blockquote><p>个人认为不错的文章</p></blockquote><ul><li><a href="https://learnku.com/articles/45033">PHP yield 协程 生成器用法探究 (一)</a></li><li><a href="https://learnku.com/articles/46368">PHP yield from 生成器用法探究 (二)</a></li><li><a href="https://learnku.com/articles/46508">PHP yield 高级用法—同步编码，异步执行</a></li><li><a href="https://www.laruence.com/2015/05/28/3038.html">在PHP中使用协程实现多任务调度</a></li><li><a href="https://learnku.com/laravel/t/1442/php-using-yield-to-achieve-asynchronous-web-server">PHP用yield实现异步Webserver</a></li></ul><h2 id="嘻嘻"><a href="#嘻嘻" class="headerlink" title="嘻嘻"></a>嘻嘻</h2><p>最近心情不行，偷个懒</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
+      
+    
+    </summary>
+    
+    
+      <category term="分享" scheme="https://blog.lihq.xyz/categories/%E5%88%86%E4%BA%AB/"/>
+    
+      <category term="转载" scheme="https://blog.lihq.xyz/categories/%E5%88%86%E4%BA%AB/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="php" scheme="https://blog.lihq.xyz/tags/php/"/>
+    
+  </entry>
   
   <entry>
     <title>国庆</title>
@@ -522,34 +550,6 @@
     
     
       <category term="php" scheme="https://blog.lihq.xyz/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Docker实践之应用篇 - MailHog</title>
-    <link href="https://blog.lihq.xyz/2019/10/12/application-of-docker-practice-mailhog/"/>
-    <id>https://blog.lihq.xyz/2019/10/12/application-of-docker-practice-mailhog/</id>
-    <published>2019-10-12T02:18:00.000Z</published>
-    <updated>2022-05-21T00:53:09.215Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="Docker实践之应用篇-MailHog"><a href="#Docker实践之应用篇-MailHog" class="headerlink" title="Docker实践之应用篇 - MailHog"></a>Docker实践之应用篇 - MailHog</h1><h2 id="MailHog-介绍"><a href="#MailHog-介绍" class="headerlink" title="MailHog 介绍"></a>MailHog 介绍</h2><p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/8ef163508cfe1.png" alt=""></p><blockquote><p>引用<a href="https://github.com/mailhog/MailHog">mailhog/MailHog</a>的介绍：Web and API based SMTP testing</p></blockquote><p>即 本地开发测试的邮件服务，它提供了一个 Web 界面，可以检查应用发送的邮件，运行 MailHog 最简单的方法是用 Docker</p><h2 id="运行应用"><a href="#运行应用" class="headerlink" title="运行应用"></a>运行应用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mailhog -p 1025:1025 -p 8025:8025 -d mailhog/mailhog</span><br></pre></td></tr></table></figure><p>其中1025 是发邮件用的端口，8025 是 Web 界面用的端口</p><p>运行之后看到下面的结果就代表成功了，是不是很简单 -.-!<br><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/0dda99bfd5c22.png" alt=""></p><h2 id="查看web页面"><a href="#查看web页面" class="headerlink" title="查看web页面"></a>查看web页面</h2><p>因为我是虚拟机环境，配置了虚拟网络，所以访问地址是<a href="http://192.168.56.10:8025">http://192.168.56.10:8025</a></p><p>访问ip地址要根据自己的环境来切换哦，别照搬</p><p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/ea6a2d4084516.png" alt=""></p><h2 id="测试一下"><a href="#测试一下" class="headerlink" title="测试一下"></a>测试一下</h2><p>我这里使用了<a href="https://github.com/mailhog/mhsendmail/">mailhog/mhsendmail</a>模拟了邮件发送</p><p>安装也是很简单的</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install go</span><br><span class="line">go get github.com/mailhog/mhsendmail</span><br><span class="line">ln  ~/go/bin/mhsendmail /usr/bin/mhsendmail</span><br><span class="line">mhsendmail -h</span><br></pre></td></tr></table></figure><p>测试发送</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mhsendmail --smtp-addr=&quot;127.0.0.1:1025&quot; test@mailhog.local &lt;&lt;EOF</span><br><span class="line">From: App &lt;app@mailhog.local&gt;</span><br><span class="line">To: Test &lt;test@mailhog.local&gt;</span><br><span class="line">Subject: Test message</span><br><span class="line"></span><br><span class="line">Some content!</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure><p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/26e904d7e71d4.png" alt=""></p><p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/1524e0539aae5.png" alt=""></p><p>可以通过web页面看到我们已经发送成功了</p><h2 id="项目中"><a href="#项目中" class="headerlink" title="项目中"></a>项目中</h2><p>配置应用的 SMTP 邮件功能的时候，邮件服务主机填写 localhost，端口号是 1025。这样应用发送的邮件都会被 mailhog 接收到，你在它提供的 Web 界面可以检查邮件内容。</p><p>如在laravel中时，.env配置如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MAIL_DRIVER=smtp</span><br><span class="line">MAIL_HOST=127.0.0.1</span><br><span class="line">MAIL_PORT=1025</span><br><span class="line">MAIL_USERNAME=null</span><br><span class="line">MAIL_PASSWORD=null</span><br><span class="line">MAIL_ENCRYPTION=null</span><br></pre></td></tr></table></figure><h2 id="停止服务"><a href="#停止服务" class="headerlink" title="停止服务"></a>停止服务</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mailhog</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
-      
-    
-    </summary>
-    
-    
-      <category term="分享" scheme="https://blog.lihq.xyz/categories/%E5%88%86%E4%BA%AB/"/>
-    
-    
-      <category term="tools" scheme="https://blog.lihq.xyz/tags/tools/"/>
-    
-      <category term="docker" scheme="https://blog.lihq.xyz/tags/docker/"/>
     
   </entry>
   
