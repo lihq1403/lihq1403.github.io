@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>think-rbac for thinkphp6.0 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="think-rbac for thinkphp6.0"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "think-rbac for thinkphp6.0",
+  "url": "https://blog.lihq.xyz/2019/12/27/think-rbac-for-thinkphp6.0/",
+  "image": "https://blog-1256184194.file.myqcloud.com/2019/12/27/590c427344948.jpg",
+  "datePublished": "2019-12-27T12:46:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.966Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2019/12/27/think-rbac-for-thinkphp6.0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'think-rbac for thinkphp6.0',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2019/12/27/590c427344948.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">think-rbac for thinkphp6.0</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">think-rbac for thinkphp6.0</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-27T12:46:00.000Z" title="发表于 2019-12-27 20:46:00">2019-12-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.966Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="think-rbac-for-thinkphp6-0"><a href="#think-rbac-for-thinkphp6-0" class="headerlink" title="think-rbac for thinkphp6.0"></a>think-rbac for thinkphp6.0</h1><blockquote>
+<p>之前做了一个thinkphp5.1版本的rbac接口管理，最近开始使用thinkphp6.0了，所以就可以开始升级我的rbac啦，哈哈哈</p>
+</blockquote>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li>首先用composer安装</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer require lihq1403/think-rbac:^1.0</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>发布配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think lihq1403:rbac-publish</span><br></pre></td></tr></table></figure>
+
+<p>会生成一个rbac.php的配置文件在config目录下</p>
+<ol start="3">
+<li>rbac数据库迁移</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think lihq1403:rbac-migrate</span><br></pre></td></tr></table></figure>
+
+<p>然后就会发现数据库多了5张表，表字段具体内容可看代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rbac_role  角色 表</span><br><span class="line">rbac_user_role 用户角色 中间表</span><br><span class="line">rbac_permission_group 权限组 表</span><br><span class="line">rbac_permission 权限规则 表</span><br><span class="line">rbac_role_permission_group 角色权限组 中间表</span><br><span class="line">rbac_log 请求日志 表</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>thinkphp6里面使用<br>在你需要用到权限的用户model里面，引入<code>RBACUser</code>，参考如下：</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">app</span>\<span class="title class_">common</span>\<span class="title class_">models</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Lihq1403</span>\<span class="title">ThinkRbac</span>\<span class="title">traits</span>\<span class="title">RBACUser</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class AdminUser</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@package</span> app\common\models</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminUser</span> <span class="keyword">extends</span> <span class="title">BaseModel</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 超级管理员id</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">SUPER_ADMINISTRATOR_ID</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">use</span> <span class="title">RBACUser</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>配合路由使用</li>
+</ol>
+<blockquote>
+<p>如果不想使用的话，可以参考<code>Lihq1403\ThinkRbac\controller\RBACController</code>做自己的自定义方法</p>
+</blockquote>
+<p>路由参考如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// rbac 管理</span><br><span class="line">Route::group(&#x27;rbac&#x27;, function () &#123;</span><br><span class="line"></span><br><span class="line">    // 角色管理</span><br><span class="line">    Route::post(&#x27;role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@addRole&#x27;); // 添加角色</span><br><span class="line">    Route::put(&#x27;role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@editRole&#x27;); // 修改角色</span><br><span class="line">    Route::delete(&#x27;role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@delRole&#x27;); // 删除角色</span><br><span class="line">    Route::get(&#x27;roles&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@getRoles&#x27;); // 角色列表</span><br><span class="line">    Route::get(&#x27;role/permission-group&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@roleHoldPermissionGroup&#x27;); // 角色拥有的权限列表</span><br><span class="line">    Route::post(&#x27;role/change-permission-group&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@diffPermissionGroup&#x27;); // 角色更换的权限列表</span><br><span class="line"></span><br><span class="line">    // 权限组管理</span><br><span class="line">    Route::post(&#x27;permission_group&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@addPermissionGroup&#x27;); // 权限组新增</span><br><span class="line">    Route::put(&#x27;permission_group&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@editPermissionGroup&#x27;); // 权限组编辑</span><br><span class="line">    Route::delete(&#x27;permission_group&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@delPermissionGroup&#x27;);// 权限组删除</span><br><span class="line">    Route::get(&#x27;permission_groups&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@getPermissionGroups&#x27;); // 权限组列表</span><br><span class="line"></span><br><span class="line">    // 权限管理</span><br><span class="line">    Route::post(&#x27;permission&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@addPermission&#x27;); // 权限新增</span><br><span class="line">    Route::put(&#x27;permission&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@editPermission&#x27;); // 权限编辑</span><br><span class="line">    Route::delete(&#x27;permission&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@delPermission&#x27;); // 权限删除</span><br><span class="line">    Route::get(&#x27;permissions&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@getPermissions&#x27;); // 权限列表</span><br><span class="line"></span><br><span class="line">    // 管理员管理</span><br><span class="line">    Route::post(&#x27;admin-user/role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@userAssignRoles&#x27;); // 给管理员分配角色</span><br><span class="line">    Route::delete(&#x27;admin-user/role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@userCancelRoles&#x27;); // 给管理员删除角色</span><br><span class="line">    Route::post(&#x27;admin-user/sync-role&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@userSyncRoles&#x27;); // 同步管理员角色</span><br><span class="line"></span><br><span class="line">    // 日志管理</span><br><span class="line">    Route::get(&#x27;logs&#x27;, &#x27;Lihq1403\ThinkRbac\controller\RBACController@getLog&#x27;); // 获取日志</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/27/5c73436844f49.png" alt=""></p>
+<ol start="6">
+<li>配合中间件进行权限验证<br>参考中间件如下：</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">app</span>\<span class="title class_">middleware</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">common</span>\<span class="title">facades</span>\<span class="title">AdminAuth</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">common</span>\<span class="title">models</span>\<span class="title">AdminUser</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Lihq1403</span>\<span class="title">ThinkRbac</span>\<span class="title">exception</span>\<span class="title">ForbiddenException</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Lihq1403</span>\<span class="title">ThinkRbac</span>\<span class="title">facade</span>\<span class="title">RBAC</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Request</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdminUserRbac</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * rbac中间件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> Request $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> \Closure $next</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ForbiddenException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params">Request <span class="variable">$request</span>, \<span class="built_in">Closure</span> <span class="variable">$next</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 获取要验证的用户id</span></span><br><span class="line">        <span class="variable">$uid</span> = <span class="title class_">AdminAuth</span>::<span class="title function_ invoke__">uid</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 超级管理员不需要进行权限控制</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$uid</span> !== <span class="title class_">AdminUser</span>::<span class="variable constant_">SUPER_ADMINISTRATOR_ID</span>) &#123;</span><br><span class="line">            <span class="comment">// 检查权限</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                RBAC::<span class="title function_ invoke__">can</span>(<span class="variable">$uid</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (\Lihq1403\ThinkRbac\exception\ForbiddenException <span class="variable">$exception</span>)&#123;</span><br><span class="line">                <span class="comment">// 如果没有权限，会抛出Lihq1403\ThinkRbac\exception\ForbiddenException异常</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ForbiddenException</span>(<span class="variable">$exception</span>-&gt;<span class="title function_ invoke__">getMessage</span>());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 记录日志</span></span><br><span class="line">        RBAC::<span class="title function_ invoke__">log</span>(<span class="variable">$uid</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$next</span>(<span class="variable">$request</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>生成规则</li>
+</ol>
+<blockquote>
+<p>在config/rbac.php里面，会有两个数组，用于权限初始化，<code>permission_group_list</code>和<code>permission_list</code></p>
+</blockquote>
+<p>对自己的系统进行权限配置之后，刷新权限规则</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php think lihq1403:rbac-refresh -f yes</span><br></pre></td></tr></table></figure>
+
+<h1 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h1><h2 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$rbac</span> = <span class="keyword">new</span> <span class="title class_">Rbac</span>();</span><br><span class="line"><span class="comment">// 或者使用门面</span></span><br><span class="line">\Lihq1403\ThinkRbac\facade\RBAC::<span class="title function_ invoke__">action</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h2><p>请参考<code>Lihq1403\ThinkRbac\lib\RBACLib</code>和<code>Lihq1403\ThinkRbac\Rbac</code></p>
+<h1 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h1><div style="text-align: center">
+  <div class="github-card"
+    data-user="lihq1403"
+    data-repo="think-rbac"
+    data-height="200"
+    data-width="100%"
+    data-theme="default"
+    data-target=""
+    data-client-id=""
+    data-client-secret=""
+  ></div>
+</div>
+<script src="/github-card-lib/githubcard.js"></script>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz">Lihq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz/2019/12/27/think-rbac-for-thinkphp6.0/">https://blog.lihq.xyz/2019/12/27/think-rbac-for-thinkphp6.0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.lihq.xyz" target="_blank">Lihq - Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/php/">php</a><a class="post-meta__tags" href="/tags/thinkphp/">thinkphp</a><a class="post-meta__tags" href="/tags/tools/">tools</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/2019/12/27/590c427344948.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#think-rbac-for-thinkphp6-0"><span class="toc-number">1.</span> <span class="toc-text">think-rbac for thinkphp6.0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8API"><span class="toc-number">3.</span> <span class="toc-text">常用API</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="toc-number">3.1.</span> <span class="toc-text">实例化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">具体方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%9C%B0%E5%9D%80"><span class="toc-number">4.</span> <span class="toc-text">源码地址</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || '7625670b24a84a95431b9814ec3a8b8c'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,105 @@
+<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义HTML页面示例</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 欢迎来到自定义HTML页面</h1>
+        
+        <div class="card">
+            <h3>📝 这是一个完全自定义的HTML页面</h3>
+            <p>您可以在这里添加任何HTML、CSS和JavaScript代码，创建完全自定义的页面体验。</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="card">
+                <h4>🎨 完全自定义设计</h4>
+                <p>不受主题限制，可以创建独特的页面布局和设计。</p>
+            </div>
+            <div class="card">
+                <h4>⚡ 高性能</h4>
+                <p>直接生成静态HTML，加载速度极快。</p>
+            </div>
+            <div class="card">
+                <h4>🔧 灵活配置</h4>
+                <p>支持自定义JavaScript交互和动态效果。</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/" class="btn">返回首页</a>
+            <a href="/travel/2025%20日本/" class="btn">查看日本旅游攻略</a>
+        </div>
+
+        <script>
+            // 您可以在这里添加JavaScript代码
+            console.log("自定义HTML页面加载完成！");
+            
+            // 添加简单的交互效果
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

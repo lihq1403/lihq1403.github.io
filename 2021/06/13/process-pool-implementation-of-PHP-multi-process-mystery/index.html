@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PHP多进程奥秘之进程池实现 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PHP多进程奥秘之进程池实现 前几天公司分享会，大佬twosee讲了一节《PHP手写多进程服务》，自己也动手实现一下，哈哈哈  进程，啥是进程简单点就是，正在进行的一个过程或者说一个任务。而负责执行该任务的是cpu。  CPU同一时间只能干一件事，但是我们观察到的现象是，多个程序可以同时运行。..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PHP多进程奥秘之进程池实现",
+  "url": "https://blog.lihq.xyz/2021/06/13/process-pool-implementation-of-PHP-multi-process-mystery/",
+  "image": "https://blog-1256184194.file.myqcloud.com/2021/06/13/052cb621cffde.jpg",
+  "datePublished": "2021-06-13T05:30:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.967Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2021/06/13/process-pool-implementation-of-PHP-multi-process-mystery/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PHP多进程奥秘之进程池实现',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2021/06/13/052cb621cffde.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">PHP多进程奥秘之进程池实现</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">PHP多进程奥秘之进程池实现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-13T05:30:00.000Z" title="发表于 2021-06-13 13:30:00">2021-06-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.967Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="PHP多进程奥秘之进程池实现"><a href="#PHP多进程奥秘之进程池实现" class="headerlink" title="PHP多进程奥秘之进程池实现"></a>PHP多进程奥秘之进程池实现</h1><blockquote>
+<p>前几天公司分享会，大佬twosee讲了一节《PHP手写多进程服务》，自己也动手实现一下，哈哈哈</p>
+</blockquote>
+<h2 id="进程，啥是进程"><a href="#进程，啥是进程" class="headerlink" title="进程，啥是进程"></a>进程，啥是进程</h2><p>简单点就是，正在进行的一个过程或者说一个任务。而负责执行该任务的是cpu。</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/e77a60fd74ddc.png" alt="Snipaste_2021-06-13_11-08-52.png"></p>
+<p>CPU同一时间只能干一件事，但是我们观察到的现象是，多个程序可以同时运行。因为我们的操作系统帮我们设计了一个牛逼的任务调度，采用时间片轮转的抢占式调度方式，正常来说，CPU一个内核一个时间只能干一件事，通过时间片的方式，无感切换执行。</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/5144ce992b89a.png" alt="Snipaste_2021-06-13_11-13-26.png"></p>
+<h2 id="不同系统下的多进程编程"><a href="#不同系统下的多进程编程" class="headerlink" title="不同系统下的多进程编程"></a>不同系统下的多进程编程</h2><p>每个语言的多进程编程，底层其实都是调用操作系统提供的相关api</p>
+<h3 id="Unix"><a href="#Unix" class="headerlink" title="Unix"></a>Unix</h3><p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/9e923f5b10d84.png" alt="Snipaste_2021-06-13_11-17-06.png"></p>
+<h3 id="跨平台"><a href="#跨平台" class="headerlink" title="跨平台"></a>跨平台</h3><p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/5e4016fa80bbd.png" alt="Snipaste_2021-06-13_11-17-15.png"></p>
+<h2 id="PHP实现"><a href="#PHP实现" class="headerlink" title="PHP实现"></a>PHP实现</h2><p>主要都是通过pcntl函数来进行多进程编程</p>
+<h3 id="pcntl-fork"><a href="#pcntl-fork" class="headerlink" title="pcntl_fork"></a>pcntl_fork</h3><ul>
+<li>在当前进程当前位置产生分支（子进程）</li>
+<li>fork是创建了一个子进程，父进程和子进程都从fork的位置开始向下继续执行，不同的是父进程执行过程中，得到的fork返回值为子进程 号，而子进程得到的是0</li>
+<li>子进程与父进程共享程序正文段</li>
+<li>子进程拥有父进程的数据空间和堆、栈的副本，注意是副本，不是共享</li>
+<li>fork之后，是父进程先执行还是子进程先执行无法确认，取决于系统调度</li>
+</ul>
+<blockquote>
+<p>PS：这里说子进程拥有父进程数据空间以及堆、栈的副本，实际上，在大多数的实现中也并不是真正的完全副本。更多是采用了COW（Copy On Write）即写时复制的技术来节约存储空间。简单来说，如果父进程和子进程都不修改这些 数据、堆、栈 的话，那么父进程和子进程则是暂时共享同一份 数据、堆、栈。只有当父进程或者子进程试图对 数据、堆、栈 进行修改的时候，才会产生复制操作，这就叫做写时复制。</p>
+</blockquote>
+<h4 id="程序从pcntl-fork-后父进程和子进程将各自继续往下执行代码"><a href="#程序从pcntl-fork-后父进程和子进程将各自继续往下执行代码" class="headerlink" title="程序从pcntl_fork()后父进程和子进程将各自继续往下执行代码"></a>程序从pcntl_fork()后父进程和子进程将各自继续往下执行代码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/** <span class="doctag">@noinspection</span> ALL */</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$parentPid</span> = <span class="title function_ invoke__">getmypid</span>();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;目前父进程的pid为：&#x27;</span> . <span class="variable">$parentPid</span> . PHP_EOL;</span><br><span class="line"></span><br><span class="line"><span class="variable">$pid</span> = <span class="title function_ invoke__">pcntl_fork</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// pcntl_fork()后父进程和子进程将各自继续往下执行代码</span></span><br><span class="line"><span class="comment">// 上面只fork了一次，但是下面的代码会执行两次，一次在父进程里，一次在子进程里</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$pid</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;我创建了一个子进程：&#x27;</span> . <span class="variable">$pid</span> . PHP_EOL;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="number">0</span> === <span class="variable">$pid</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;我是新创建的子进程&#x27;</span> . PHP_EOL;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;fork失败&#x27;</span> . PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果可见，<strong>执行了两次fork之后的代码，fork之前的只有一次</strong></p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/bc7b679248056.png" alt="Snipaste_2021-06-13_11-25-08.png"></p>
+<h4 id="子进程拥有父进程的数据副本，而并不是共享"><a href="#子进程拥有父进程的数据副本，而并不是共享" class="headerlink" title="子进程拥有父进程的数据副本，而并不是共享"></a>子进程拥有父进程的数据副本，而并不是共享</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php /** @noinspection ALL */</span><br><span class="line"></span><br><span class="line">$parentPid = getmypid();</span><br><span class="line">echo &#x27;目前父进程的pid为：&#x27; . $parentPid . PHP_EOL;</span><br><span class="line"></span><br><span class="line">// 初始化一个number变量 1</span><br><span class="line">$number = 1;</span><br><span class="line">$pid = pcntl_fork();</span><br><span class="line"></span><br><span class="line">// pcntl_fork()后父进程和子进程将各自继续往下执行代码</span><br><span class="line">// 上面只fork了一次，但是下面的代码会执行两次，一次在父进程里，一次在子进程里</span><br><span class="line">if ($pid &gt; 0) &#123;</span><br><span class="line">    $number += 1;</span><br><span class="line">    echo &#x27;我创建了一个子进程：&#x27; . $pid . PHP_EOL;</span><br><span class="line">    echo &#x27;number+1 :&#x27; . $number . PHP_EOL;</span><br><span class="line">&#125; else if (0 === $pid) &#123;</span><br><span class="line">    $number += 2;</span><br><span class="line">    echo &#x27;我是新创建的子进程&#x27; . PHP_EOL;</span><br><span class="line">    echo &#x27;number+2 :&#x27; . $number . PHP_EOL;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    echo &#x27;fork失败&#x27; . PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果可见，<strong>number在进程里执行时，数值的初始值都为1</strong></p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/1eb474da9f3fd.png" alt="Snipaste_2021-06-13_11-29-47.png"></p>
+<h4 id="循环创建子进程会发生什么"><a href="#循环创建子进程会发生什么" class="headerlink" title="循环创建子进程会发生什么"></a>循环创建子进程会发生什么</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php /** @noinspection ALL */</span><br><span class="line"></span><br><span class="line">for ($i = 1; $i &lt;= 3; $i++) &#123;</span><br><span class="line">    $parentPid = getmypid();</span><br><span class="line">    echo $i.&#x27;目前父进程的pid为：&#x27; . $parentPid . PHP_EOL;</span><br><span class="line">    $pid = pcntl_fork();</span><br><span class="line">    if ($pid &gt; 0) &#123;</span><br><span class="line">        echo $i.&#x27;我创建了一个子进程：&#x27; . $pid . PHP_EOL;</span><br><span class="line">    &#125; else if (0 === $pid) &#123;</span><br><span class="line">        echo $i.&#x27;我是新创建的子进程&#x27; . PHP_EOL;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        echo $i.&#x27;fork失败&#x27; . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/d3d9c90a3b943.png" alt="Snipaste_2021-06-13_12-06-52.png"></p>
+<p>这样不好看，我调整一下顺序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">1目前父进程的pid为：2685</span><br><span class="line">1我创建了一个子进程：2686</span><br><span class="line">1我是新创建的子进程</span><br><span class="line"></span><br><span class="line">2目前父进程的pid为：2685</span><br><span class="line">2我创建了一个子进程：2687</span><br><span class="line">2我是新创建的子进程</span><br><span class="line"></span><br><span class="line">2目前父进程的pid为：2686</span><br><span class="line">2我创建了一个子进程：2690</span><br><span class="line">2我是新创建的子进程</span><br><span class="line"></span><br><span class="line">3目前父进程的pid为：2685</span><br><span class="line">3我创建了一个子进程：2688</span><br><span class="line">3我是新创建的子进程</span><br><span class="line"></span><br><span class="line">3目前父进程的pid为：2687</span><br><span class="line">3我创建了一个子进程：2689</span><br><span class="line">3我是新创建的子进程</span><br><span class="line"></span><br><span class="line">3目前父进程的pid为：2686</span><br><span class="line">3我创建了一个子进程：2691</span><br><span class="line">3我是新创建的子进程</span><br><span class="line"></span><br><span class="line">3目前父进程的pid为：2690</span><br><span class="line">3我创建了一个子进程：2692</span><br><span class="line">3我是新创建的子进程</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/4020dda8e8cdd.png" alt="创建子进程流程图.png"></p>
+<p>可以看到，创建了7个子进程，再次验证了pcntl_fork()后父进程和子进程将各自继续往下执行代码，也就是循环调用，子进程如果没有提前结束的话，会不断增加，形成僵尸进程</p>
+<p>循环3次，创建了1+2+4个子进程，循环4次，创建了1+2+4+8个子进程，即1+2+4+···+2^(n-1)</p>
+<h2 id="孤儿进程和僵尸进程"><a href="#孤儿进程和僵尸进程" class="headerlink" title="孤儿进程和僵尸进程"></a>孤儿进程和僵尸进程</h2><h3 id="孤儿进程"><a href="#孤儿进程" class="headerlink" title="孤儿进程"></a>孤儿进程</h3><blockquote>
+<p>父进程在子进程结束之前提前退出，这些子进程将由init（进程ID为1）进程收养并完成对其各种数据状态的收集。因为子进程从此变得无依无靠、无家可归，变成了孤儿。</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/** <span class="doctag">@noinspection</span> ALL */</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$pid</span> = <span class="title function_ invoke__">pcntl_fork</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$pid</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 显示父进程的进程ID，这个函数可以是getmypid()，也可以用posix_getpid()</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Father PID:&quot;</span> . <span class="title function_ invoke__">getmypid</span>() . PHP_EOL;</span><br><span class="line">    <span class="comment">// 让父进程停止两秒钟，在这两秒内，子进程的父进程ID还是这个父进程</span></span><br><span class="line">    <span class="title function_ invoke__">sleep</span>(<span class="number">2</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="number">0</span> == <span class="variable">$pid</span>) &#123;</span><br><span class="line">    <span class="comment">// 让子进程循环10次，每次睡眠1s，然后每秒钟获取一次子进程的父进程进程ID</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">1</span>; <span class="variable">$i</span> &lt;= <span class="number">10</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">        <span class="title function_ invoke__">sleep</span>(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">// posix_getppid()函数的作用就是获取当前进程的父进程进程ID</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">posix_getppid</span>() . PHP_EOL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;fork error.&quot;</span> . PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话，前2秒，父进程还在，后面父进程就结束了，那么子进程都会被变成孤儿进程然后被systemd收起</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/ec97b8954df74.png" alt="Snipaste_2021-06-13_12-28-26.png"></p>
+<p>可以看到后面的pid都变成1</p>
+<h3 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h3><blockquote>
+<p>僵尸进程是指父进程在fork出子进程，而后子进程在结束后，父进程并没有调用wait或者waitpid等完成对其清理善后工作，导致改子进程进程ID、文件描述符等依然保留在系统中，极大浪费了系统资源。所以，僵尸进程是对系统有危害的，而孤儿进程则相对来说没那么严重。</p>
+</blockquote>
+<p>刚刚我们前面演示的代码，就会造成僵尸进程，查一下看看</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/4b0da5a258a7e.png" alt="Snipaste_2021-06-13_12-21-18.png"></p>
+<p>可以看到有非常多状态为 z或者Z 的进程为僵尸进程</p>
+<h3 id="pcntl-wait和pcntl-waitpid"><a href="#pcntl-wait和pcntl-waitpid" class="headerlink" title="pcntl_wait和pcntl_waitpid"></a>pcntl_wait和pcntl_waitpid</h3><h4 id="pcntl-wait"><a href="#pcntl-wait" class="headerlink" title="pcntl_wait"></a>pcntl_wait</h4><blockquote>
+<p>这个函数的作用就是 “ 等待或者返回子进程的状态 ”，当父进程执行了该函数后，就会阻塞挂起等待子进程的状态一直等到子进程已经由于某种原因退出或者终止。换句话说就是如果子进程还没结束，那么父进程就会一直等等等，如果子进程已经结束，那么父进程就会立刻得到子进程状态。这个函数返回退出的子进程的进程ID或者失败返回-1。</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/** <span class="doctag">@noinspection</span> ALL */</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$pid</span> = <span class="title function_ invoke__">pcntl_fork</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$pid</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;父进程id：&#x27;</span> . <span class="title function_ invoke__">getmypid</span>() . PHP_EOL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回$wait_result，就是子进程的进程号，如果子进程已经是僵尸进程则为0</span></span><br><span class="line">    <span class="comment">// 子进程状态则保存在了$status参数中，可以通过pcntl_wexitstatus()等一系列函数来查看$status的状态信息是什么</span></span><br><span class="line">    <span class="variable">$wait_result</span> = <span class="title function_ invoke__">pcntl_wait</span>(<span class="variable">$status</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;回收子进程id：&#x27;</span> . <span class="variable">$wait_result</span> . PHP_EOL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 让主进程休息60秒钟</span></span><br><span class="line">    <span class="title function_ invoke__">sleep</span>(<span class="number">60</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="number">0</span> == <span class="variable">$pid</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;子进程id：&#x27;</span> . <span class="title function_ invoke__">getmypid</span>() . PHP_EOL;</span><br><span class="line">    <span class="comment">// 让子进程休息10秒钟，但是进程结束后，父进程不对子进程做任何处理工作，这样这个子进程就会变成僵尸进程</span></span><br><span class="line">    <span class="title function_ invoke__">sleep</span>(<span class="number">10</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">exit</span>(<span class="string">&#x27;fork error.&#x27;</span> . PHP_EOL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/bd9d20ca1a467.png" alt="Snipaste_2021-06-13_12-42-41.png"></p>
+<p>执行结果，可以看出，父进程会一直等待子进程结束（阻塞），结束后会进程回收，就避免了僵尸进程的产生</p>
+<h4 id="pcntl-waitpid"><a href="#pcntl-waitpid" class="headerlink" title="pcntl_waitpid"></a>pcntl_waitpid</h4><blockquote>
+<p>pcntl_waitpid( $pid, &amp;$status, $option = 0 )的第三个参数如果设置为WNOHANG，那么父进程不会阻塞一直等待到有子进程退出或终止，否则将会和pcntl_wait()的表现类似。</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/** <span class="doctag">@noinspection</span> ALL */</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$pid</span> = <span class="title function_ invoke__">pcntl_fork</span>();</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$pid</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;父进程id：&#x27;</span> . <span class="title function_ invoke__">getmypid</span>() . PHP_EOL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回值保存在$wait_result中</span></span><br><span class="line">    <span class="comment">// $pid参数表示 子进程的进程ID</span></span><br><span class="line">    <span class="comment">// 子进程状态则保存在了参数$status中</span></span><br><span class="line">    <span class="comment">// 将第三个option参数设置为常量WNOHANG，则可以避免主进程阻塞挂起，此处父进程将立即返回继续往下执行剩下的代码</span></span><br><span class="line">    <span class="variable">$wait_result</span> = <span class="title function_ invoke__">pcntl_waitpid</span>(<span class="variable">$pid</span>, <span class="variable">$status</span>, WNOHANG);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;回收子进程id：&#x27;</span> . <span class="variable">$wait_result</span> . PHP_EOL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;不阻塞，运行到这里&quot;</span>.PHP_EOL;</span><br><span class="line">    <span class="comment">// 让主进程休息60秒钟</span></span><br><span class="line">    <span class="title function_ invoke__">sleep</span>(<span class="number">60</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="number">0</span> == <span class="variable">$pid</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;子进程id：&#x27;</span> . <span class="title function_ invoke__">getmypid</span>() . PHP_EOL;</span><br><span class="line">    <span class="comment">// 让子进程休息10秒钟，但是进程结束后，父进程不对子进程做任何处理工作，这样这个子进程就会变成僵尸进程</span></span><br><span class="line">    <span class="title function_ invoke__">sleep</span>(<span class="number">10</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">exit</span>(<span class="string">&#x27;fork error.&#x27;</span> . PHP_EOL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果，可以看出，父进程并没有等待子进程的状态，避免了非阻塞挂起</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2021/06/13/8813a8ebcd819.png" alt="Snipaste_2021-06-13_12-49-17.png"></p>
+<h3 id="简单的进程池示例"><a href="#简单的进程池示例" class="headerlink" title="简单的进程池示例"></a>简单的进程池示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php /** @noinspection ALL */</span><br><span class="line"></span><br><span class="line">define(&#x27;PROCESS_COUNT&#x27;, 4);</span><br><span class="line"></span><br><span class="line">$pidMap = [];</span><br><span class="line"></span><br><span class="line">while (true) &#123;</span><br><span class="line">    $pid = pcntl_fork();</span><br><span class="line">    if ($pid &lt; 0) &#123;</span><br><span class="line">        echo &quot;[Parent] Fork failed&quot; . PHP_EOL;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125; elseif ($pid &gt; 0) &#123;</span><br><span class="line">        // 记录创建的子进程数</span><br><span class="line">        $pidMap[$pid] = true;</span><br><span class="line">        echo &quot;[Parent] New Process &#123;$pid&#125;&quot; . PHP_EOL;</span><br><span class="line">        if (count($pidMap) === PROCESS_COUNT) &#123;</span><br><span class="line">            // 如果进程数达到最大值，进行子进程等等，并回收</span><br><span class="line">            $pid = pcntl_wait($status);</span><br><span class="line">            echo sprintf(&quot;[Parent] Process %s exit with status %d, signal=%d&quot; . PHP_EOL, $pid, pcntl_wexitstatus($status), pcntl_wtermsig($status));</span><br><span class="line">            unset($pidMap[$pid]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        echo sprintf(&quot;[Child %d] running&quot; . PHP_EOL, getmypid());</span><br><span class="line">        sleep(mt_rand(1, 30));</span><br><span class="line">        echo sprintf(&quot;[Child %d] exit(%d)&quot; . PHP_EOL, getmygid(), $exStatus = mt_rand(0, 255));</span><br><span class="line">        exit($exStatus);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整的进程池示例"><a href="#完整的进程池示例" class="headerlink" title="完整的进程池示例"></a>完整的进程池示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php /** @noinspection ALL */</span><br><span class="line"></span><br><span class="line">class Process</span><br><span class="line">&#123;</span><br><span class="line">    protected $pid;</span><br><span class="line"></span><br><span class="line">    public function __construct(callable $callable, string $name = null)</span><br><span class="line">    &#123;</span><br><span class="line">        $pid = pcntl_fork();</span><br><span class="line">        if ($pid &lt; 0) &#123;</span><br><span class="line">            throw new Exception(pcntl_strerror(pcntl_get_last_error(), pcntl_get_last_error()));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if ($pid &gt; 0) &#123;</span><br><span class="line">                echo &quot;[Parent] New Process &#123;$pid&#125;&quot; . PHP_EOL;</span><br><span class="line">                $this-&gt;pid = $pid;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if ($name) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">                $this-&gt;pid = getmypid();</span><br><span class="line">                echo sprintf(&quot;[Child %d] running&quot; . PHP_EOL, $this-&gt;pid);</span><br><span class="line">                $exitStatus = $callable();</span><br><span class="line">                echo sprintf(&quot;[Child %d] exit(%d)&quot; . PHP_EOL, $this-&gt;pid, $exitStatus);</span><br><span class="line">                exit($exitStatus);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function getPid(): int</span><br><span class="line">    &#123;</span><br><span class="line">        return $this-&gt;pid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function kill(int $signal = SIGTERM): void</span><br><span class="line">    &#123;</span><br><span class="line">        if (!posix_kill($this-&gt;pid, $signal)) &#123;</span><br><span class="line">            throw new Exception(sprintf(&quot;Kill(%d, %d) fail, reason: %s&quot;), $this-&gt;getPid(), $signal, posix_strerror(posix_get_last_error()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static function setName(string $name)</span><br><span class="line">    &#123;</span><br><span class="line">        if (function_exists(&#x27;cli_set_process_title&#x27;) &amp;&amp; PHP_OS_FAMILY !== &#x27;Darwin&#x27;) &#123;</span><br><span class="line">            cli_set_process_title($name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ProcessPool</span><br><span class="line">&#123;</span><br><span class="line">    protected $pool = [];</span><br><span class="line">    protected $idMap = [];</span><br><span class="line">    protected $callable;</span><br><span class="line">    protected $count;</span><br><span class="line"></span><br><span class="line">    public function __construct(callable $callable, int $count)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;callable = $callable;</span><br><span class="line">        $this-&gt;count = $count;</span><br><span class="line">        Process::setName(&#x27;Parent&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function run()</span><br><span class="line">    &#123;</span><br><span class="line">        for ($id = 0; $id &lt; $this-&gt;count; $id++) &#123;</span><br><span class="line">            $this-&gt;createProcess($id);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        while (true) &#123;</span><br><span class="line">            $pid = pcntl_wait($status);</span><br><span class="line">            echo sprintf(&quot;[Parent] Process %s exit with status %d, signal=%d&quot; . PHP_EOL, $pid, pcntl_wexitstatus($status), pcntl_wtermsig($status));</span><br><span class="line">            unset($this-&gt;pool[$pid]);</span><br><span class="line">            $id = $this-&gt;idMap[$pid];</span><br><span class="line">            unset($this-&gt;idMap[$pid]);</span><br><span class="line">            $this-&gt;createProcess($id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected function createProcess(int $id)</span><br><span class="line">    &#123;</span><br><span class="line">        $process = new Process($this-&gt;callable, &quot;Child-&#123;$id&#125;&quot;);</span><br><span class="line">        $this-&gt;pool[$process-&gt;getPid()] = $process;</span><br><span class="line">        $this-&gt;idMap[$process-&gt;getPid()] = $id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$processPool = new ProcessPool(function () &#123;</span><br><span class="line">    sleep(mt_rand(1, 30));</span><br><span class="line">&#125;, 4);</span><br><span class="line">$processPool-&gt;run();</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/lihq1403/gadget/tree/master/codeSnippet/pcntl">https://github.com/lihq1403/gadget/tree/master/codeSnippet/pcntl</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz">Lihq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz/2021/06/13/process-pool-implementation-of-PHP-multi-process-mystery/">https://blog.lihq.xyz/2021/06/13/process-pool-implementation-of-PHP-multi-process-mystery/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.lihq.xyz" target="_blank">Lihq - Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/php/">php</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/2021/06/13/052cb621cffde.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%A5%A5%E7%A7%98%E4%B9%8B%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">PHP多进程奥秘之进程池实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%EF%BC%8C%E5%95%A5%E6%98%AF%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">进程，啥是进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">不同系统下的多进程编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unix"><span class="toc-number">1.2.1.</span> <span class="toc-text">Unix</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">跨平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">PHP实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pcntl-fork"><span class="toc-number">1.3.1.</span> <span class="toc-text">pcntl_fork</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E4%BB%8Epcntl-fork-%E5%90%8E%E7%88%B6%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%AD%90%E8%BF%9B%E7%A8%8B%E5%B0%86%E5%90%84%E8%87%AA%E7%BB%A7%E7%BB%AD%E5%BE%80%E4%B8%8B%E6%89%A7%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">程序从pcntl_fork()后父进程和子进程将各自继续往下执行代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%90%E8%BF%9B%E7%A8%8B%E6%8B%A5%E6%9C%89%E7%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%89%AF%E6%9C%AC%EF%BC%8C%E8%80%8C%E5%B9%B6%E4%B8%8D%E6%98%AF%E5%85%B1%E4%BA%AB"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">子进程拥有父进程的数据副本，而并不是共享</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">循环创建子进程会发生什么</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">孤儿进程和僵尸进程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">孤儿进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">僵尸进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pcntl-wait%E5%92%8Cpcntl-waitpid"><span class="toc-number">1.4.3.</span> <span class="toc-text">pcntl_wait和pcntl_waitpid</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pcntl-wait"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">pcntl_wait</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pcntl-waitpid"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">pcntl_waitpid</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E8%BF%9B%E7%A8%8B%E6%B1%A0%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.4.4.</span> <span class="toc-text">简单的进程池示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E8%BF%9B%E7%A8%8B%E6%B1%A0%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.4.5.</span> <span class="toc-text">完整的进程池示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E4%BB%A3%E7%A0%81"><span class="toc-number">1.5.</span> <span class="toc-text">参考代码</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || '63a36ce6cdee8993914781f6c2f347d7'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

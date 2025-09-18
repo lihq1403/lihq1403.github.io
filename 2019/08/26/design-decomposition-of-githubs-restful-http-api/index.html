@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【转载】Github 的 Restful HTTP API 设计分解 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content=" 原文地址：Github 的 Restful HTTP API 设计分解  什么是 RESTfulRESTful 是一种软件设计风格，由 Roy Fielding 在他的 论文 中提出，全称为 Representational State Transfer，直译为表现层状态转移，或许可以解释为..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【转载】Github 的 Restful HTTP API 设计分解",
+  "url": "https://blog.lihq.xyz/2019/08/26/design-decomposition-of-githubs-restful-http-api/",
+  "image": "https://blog-1256184194.file.myqcloud.com/2019/12/23/b64981538feea.jpg",
+  "datePublished": "2019-08-26T08:17:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.965Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2019/08/26/design-decomposition-of-githubs-restful-http-api/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【转载】Github 的 Restful HTTP API 设计分解',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2019/12/23/b64981538feea.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">【转载】Github 的 Restful HTTP API 设计分解</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【转载】Github 的 Restful HTTP API 设计分解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-08-26T08:17:00.000Z" title="发表于 2019-08-26 16:17:00">2019-08-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.965Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%BD%AC%E8%BD%BD/">转载</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>原文地址：<br><a target="_blank" rel="noopener" href="https://learnku.com/courses/laravel-advance-training/5.8/follow-github-to-learn-restful-http-api-design/3989">Github 的 Restful HTTP API 设计分解</a></p>
+</blockquote>
+<h2 id="什么是-RESTful"><a href="#什么是-RESTful" class="headerlink" title="什么是 RESTful"></a>什么是 RESTful</h2><p>RESTful 是一种软件设计风格，由 <a target="_blank" rel="noopener" href="http://roy.gbiv.com/">Roy Fielding</a> 在他的 <a target="_blank" rel="noopener" href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">论文</a> 中提出，全称为 <code>Representational State Transfer</code>，直译为<code>表现层状态转移</code>，或许可以解释为<code>用 URL 定位资源，用 HTTP 动词描述操作</code>，不用太纠结于定义，接下来我们会详细讨论。</p>
+<p>RESTful 风格的接口，目前来看，实现的最好的就是 <a target="_blank" rel="noopener" href="https://developer.github.com/v3/">Github API</a>，经常被效仿。接下来我们通过分析 Github API 来引出我们的 API 设计原则。</p>
+<h2 id="为什么选择-RESTful"><a href="#为什么选择-RESTful" class="headerlink" title="为什么选择 RESTful"></a>为什么选择 RESTful</h2><p>我认为一套接口应该尽量满足以下几个原则：</p>
+<ul>
+<li>安全可靠，高效，易扩展。</li>
+<li>简单明了，可读性强，没有歧义。</li>
+<li>API 风格统一，调用规则，传入参数和返回数据有统一的标准。</li>
+</ul>
+<p>我们当然可以根据自己的经验，或者参考知名公司的接口总结设计出一套满足要求的接口，但是每个人对接口的理解不同，设计出来的接口也会有所不同，接口的命名，请求参数的格式，响应的结果，错误响应的错误码，等等很多地方都会有不一样的实现。当你去寻求一种设计理念来帮助我们设计出满足要求的接口，一定会发现 RESTful。<br>RESTful 的设计理念基于 HTTP 协议，因为 <a target="_blank" rel="noopener" href="http://roy.gbiv.com/">Roy Fielding</a> 就是 HTTP 协议（1.0版和1.1版）的主要设计者。它是一种设计风格，没有规定我们一定如何实现，但是为我们提供了很好的设计理念。风格的统一，使得我们不需要过多的解释，就能让使用者明白该如何使用，同时也会有很多现成的工具来帮助我们实现 RESTful 风格的接口。</p>
+<h2 id="RESTful-设计原则"><a href="#RESTful-设计原则" class="headerlink" title="RESTful 设计原则"></a>RESTful 设计原则</h2><h3 id="1-HTTPS"><a href="#1-HTTPS" class="headerlink" title="1. HTTPS"></a>1. HTTPS</h3><p>HTTPS 为接口的安全提供了保障，可以有效防止通信被窃听和篡改。而且现在部署 HTTPS 的成本也越来越低，你可以通过 <a target="_blank" rel="noopener" href="https://certbot.eff.org/">cerbot</a> 等工具，方便快速的制作免费的安全证书，所以生产环境，请务必使用 HTTPS。</p>
+<blockquote>
+<p>另外注意，非 HTTPS 的 API 调用，不要重定向到 HTTPS，而要直接返回调用错误以禁止不安全的调用。</p>
+</blockquote>
+<h3 id="2-域名"><a href="#2-域名" class="headerlink" title="2. 域名"></a>2. 域名</h3><p>应当尽可能的将 API 与其主域名区分开，可以使用专用的域名，访问我们的 API，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.larabbs.com</span><br></pre></td></tr></table></figure>
+
+<p>或者可以放在主域名下，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.larabbs.com/api</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-版本控制"><a href="#3-版本控制" class="headerlink" title="3. 版本控制"></a>3. 版本控制</h3><p>随着业务的发展，需求的不断变化，API 的迭代是必然的，很可能当前版本正在使用，而我们就得开发甚至上线一个不兼容的新版本，为了让旧用户可以正常使用，为了保证开发的顺利进行，我们需要控制好 API 的版本。</p>
+<p>通常情况下，有两种做法：</p>
+<ul>
+<li>将版本号直接加入 URL 中  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://api.larabbs.com/v1</span><br><span class="line">https://api.larabbs.com/v2</span><br></pre></td></tr></table></figure></li>
+<li>使用 HTTP 请求头的 Accept 字段进行区分  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://api.larabbs.com/</span><br><span class="line">	Accept: application/prs.larabbs.v1+json</span><br><span class="line">	Accept: application/prs.larabbs.v2+json</span><br></pre></td></tr></table></figure>
+Github Api 虽然默认使用了第一种方法，但是其实是推荐并实现了第二种方法的，我们同样也尽量使用第二种方式。<br><img src="https://learnku.com/uploads/images/201712/20/6351/iVESOhNlvt.png" alt="file"></li>
+</ul>
+<h3 id="4-用-URL-定位资源"><a href="#4-用-URL-定位资源" class="headerlink" title="4. 用 URL 定位资源"></a>4. 用 URL 定位资源</h3><p>在 RESTful 的架构中，所有的一切都表示资源，每一个 URL 都代表着一种资源，资源应当是一个名词，而且大部分情况下是名词的复数，尽量不要在 URL 中出现动词。<br>先来看看 github 的 <a target="_blank" rel="noopener" href="https://developer.github.com/v3/issues/comments/">例子</a>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET /issues                                      列出所有的 issue</span><br><span class="line">GET /orgs/:org/issues                            列出某个项目的 issue</span><br><span class="line">GET /repos/:owner/:repo/issues/:number           获取某个项目的某个 issue</span><br><span class="line">POST /repos/:owner/:repo/issues                  为某个项目创建 issue</span><br><span class="line">PATCH /repos/:owner/:repo/issues/:number         修改某个 issue</span><br><span class="line">PUT /repos/:owner/:repo/issues/:number/lock      锁住某个 issue</span><br><span class="line">DELETE /repos/:owner/:repo/issues/:number/lock   解锁某个 issue</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>例子中冒号开始的代表变量，例如 /repos/summerblue/larabbs/issues </p>
+</blockquote>
+<p>在 github 的实现中，我们可以总结出：</p>
+<ul>
+<li>资源的设计可以嵌套，表明资源与资源之间的关系。</li>
+<li>大部分情况下我们访问的是某个<code>资源集合</code>，想得到<code>单个资源</code>可以通过资源的 id 或number 等唯一标识获取。</li>
+<li>某些情况下，资源会是单数形式，例如<code>某个项目某个 issue 的锁</code>，每个 issue 只会有一把锁，所以它是单数。</li>
+</ul>
+<p>错误的例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST https://api.larabbs.com/createTopic</span><br><span class="line">GET https://api.larabbs.com/topic/show/1</span><br><span class="line">POST https://api.larabbs.com/topics/1/comments/create</span><br><span class="line">POST https://api.larabbs.com/topics/1/comments/100/delete</span><br></pre></td></tr></table></figure>
+
+<p>正确的例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST https://api.larabbs.com/topics</span><br><span class="line">GET https://api.larabbs.com/topics/1</span><br><span class="line">POST https://api.larabbs.com/topics/1/comments</span><br><span class="line">DELETE https://api.larabbs.com/topics/1/comments/100</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-用-HTTP-动词描述操作"><a href="#5-用-HTTP-动词描述操作" class="headerlink" title="5. 用 HTTP 动词描述操作"></a>5. 用 HTTP 动词描述操作</h3><p>HTTP 设计了很多动词，来表示不同的操作，RESTful 很好的利用的这一点，我们需要正确的使用 HTTP 动词，来表明我们要如何操作资源。<br>先来解释一个概念，<code>幂等性</code>，指一次和多次请求某一个资源应该具有同样的副作用，也就是一次访问与多次访问，对这个资源带来的变化是相同的。</p>
+<p>常用的动词及幂等性</p>
+<table>
+<thead>
+<tr>
+<th>动词</th>
+<th>描述</th>
+<th>是否幂等</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>获取资源，单个或多个</td>
+<td>是</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>创建资源</td>
+<td>否</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>更新资源，客户端提供完整的资源数据</td>
+<td>是</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>更新资源，客户端提供部分的资源数据</td>
+<td>否</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>删除资源</td>
+<td>是</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>为什么 PUT 是幂等的而 PATCH 是非幂等的，因为 PUT 是根据客户端提供了完整的资源数据，客户端提交什么就替换为什么，而 PATCH 有可能是根据客户端提供的参数，动态的计算出某个值，例如每次请求后资源的某个参数减1，所以多次调用，资源会有不同的变化。</p>
+</blockquote>
+<p>另外需要注意的是，GET 请求对于资源来说是安全的，不允许通过 GET 请求改变（更新或创建）资源，但是真实使用中，为了方便统计类的数据，会有一些例外情况，例如帖子详情，记录访问次数，每调用一次，访问次数 +1;</p>
+<h3 id="6-资源过滤"><a href="#6-资源过滤" class="headerlink" title="6. 资源过滤"></a>6. 资源过滤</h3><p>我们需要提供合理的参数供客户端过滤资源，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?state=closed: 不同状态的资源</span><br><span class="line">?page=2&amp;per_page=100：访问第几页数据，每页多少条。</span><br><span class="line">?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-正确使用状态码"><a href="#7-正确使用状态码" class="headerlink" title="7. 正确使用状态码"></a>7. 正确使用状态码</h3><p>HTTP 提供了丰富的状态码供我们使用，正确的使用状态码可以让响应数据更具可读性。</p>
+<ul>
+<li>200 OK - 对成功的 GET、PUT、PATCH 或 DELETE 操作进行响应。也可以被用在不创建新资源的 POST 操作上</li>
+<li>201 Created - 对创建新资源的 POST 操作进行响应。应该带着指向新资源地址的 Location 头</li>
+<li>202 Accepted - 服务器接受了请求，但是还未处理，响应中应该包含相应的指示信息，告诉客户端该去哪里查询关于本次请求的信息</li>
+<li>204 No Content - 对不会返回响应体的成功请求进行响应（比如 DELETE 请求）</li>
+<li>304 Not Modified - HTTP缓存header生效的时候用</li>
+<li>400 Bad Request - 请求异常，比如请求中的body无法解析</li>
+<li>401 Unauthorized - 没有进行认证或者认证非法</li>
+<li>403 Forbidden - 服务器已经理解请求，但是拒绝执行它</li>
+<li>404 Not Found - 请求一个不存在的资源</li>
+<li>405 Method Not Allowed - 所请求的 HTTP 方法不允许当前认证用户访问</li>
+<li>410 Gone - 表示当前请求的资源不再可用。当调用老版本 API 的时候很有用</li>
+<li>415 Unsupported Media Type - 如果请求中的内容类型是错误的</li>
+<li>422 Unprocessable Entity - 用来表示校验错误</li>
+<li>429 Too Many Requests - 由于请求频次达到上限而被拒绝访问</li>
+</ul>
+<h3 id="8-数据响应格式"><a href="#8-数据响应格式" class="headerlink" title="8. 数据响应格式"></a>8. 数据响应格式</h3><p>考虑到响应数据的可读性及通用性，默认使用 JSON 作为数据响应格式。如果客户端有需求使用其他的响应格式，例如 XML，需要在 Accept 头中指定需要的格式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://api.larabbs.com/</span><br><span class="line">	Accept: application/prs.larabbs.v1+json</span><br><span class="line">	Accept: application/prs.larabbs.v1+xml</span><br></pre></td></tr></table></figure>
+<p>对于错误数据，默认使用如下结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x27;message&#x27; =&gt; &#x27;:message&#x27;,          // 错误的具体描述</span><br><span class="line">&#x27;errors&#x27; =&gt; &#x27;:errors&#x27;,            // 参数的具体错误描述，422 等状态提供</span><br><span class="line">&#x27;code&#x27; =&gt; &#x27;:code&#x27;,                // 自定义的异常码</span><br><span class="line">&#x27;status_code&#x27; =&gt; &#x27;:status_code&#x27;,  // http状态码</span><br><span class="line">&#x27;debug&#x27; =&gt; &#x27;:debug&#x27;,              // debug 信息，非生产环境提供</span><br></pre></td></tr></table></figure>
+<p>例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;message&quot;: &quot;422 Unprocessable Entity&quot;,</span><br><span class="line">    &quot;errors&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: [</span><br><span class="line">            &quot;姓名 必须为字符串。&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;status_code&quot;: 422</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;message&quot;: &quot;您无权访问该订单&quot;,</span><br><span class="line">    &quot;status_code&quot;: 403</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-调用频率限制"><a href="#9-调用频率限制" class="headerlink" title="9. 调用频率限制"></a>9. 调用频率限制</h3><p>为了防止服务器被攻击，减少服务器压力，需要对接口进行合适的限流控制，需要在响应头信息中加入合适的信息，告知客户端当前的限流情况</p>
+<ul>
+<li>X-RateLimit-Limit :100     最大访问次数</li>
+<li>X-RateLimit-Remaining :93   剩余的访问次数</li>
+<li>X-RateLimit-Reset :1513784506   到该时间点，访问次数会重置为 <code>X-RateLimit-Limit</code></li>
+</ul>
+<p>超过限流次数后，需要返回 <code>429 Too Many Requests</code> 错误。</p>
+<h3 id="10-编写文档"><a href="#10-编写文档" class="headerlink" title="10. 编写文档"></a>10. 编写文档</h3><p>为了方便用户使用，我们需要提供清晰的文档，尽可能包括以下几点</p>
+<ul>
+<li>包括每个接口的请求参数，每个参数的类型限制，是否必填，可选的值等。</li>
+<li>响应结果的例子说明，包括响应结果中，每个参数的释义。</li>
+<li>对于某一类接口，需要有尽量详细的文字说明，比如针对一些特定场景，接口应该如何调用。</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>上面讲到知识点，不需要强记，后面我们都会在实战中进行讲解，这里同学们有个大的概念即可。本课程学习完成后，你再回来看本文，就能清晰的理解这里讲的每一个概念，作为一个合格的 API 工程师，以上的知识点都是必备的。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/php/">php</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/2019/12/23/b64981538feea.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-RESTful"><span class="toc-number">1.</span> <span class="toc-text">什么是 RESTful</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9-RESTful"><span class="toc-number">2.</span> <span class="toc-text">为什么选择 RESTful</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">3.</span> <span class="toc-text">RESTful 设计原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HTTPS"><span class="toc-number">3.1.</span> <span class="toc-text">1. HTTPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9F%9F%E5%90%8D"><span class="toc-number">3.2.</span> <span class="toc-text">2. 域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="toc-number">3.3.</span> <span class="toc-text">3. 版本控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%94%A8-URL-%E5%AE%9A%E4%BD%8D%E8%B5%84%E6%BA%90"><span class="toc-number">3.4.</span> <span class="toc-text">4. 用 URL 定位资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%94%A8-HTTP-%E5%8A%A8%E8%AF%8D%E6%8F%8F%E8%BF%B0%E6%93%8D%E4%BD%9C"><span class="toc-number">3.5.</span> <span class="toc-text">5. 用 HTTP 动词描述操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E8%B5%84%E6%BA%90%E8%BF%87%E6%BB%A4"><span class="toc-number">3.6.</span> <span class="toc-text">6. 资源过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">3.7.</span> <span class="toc-text">7. 正确使用状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.8.</span> <span class="toc-text">8. 数据响应格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E8%B0%83%E7%94%A8%E9%A2%91%E7%8E%87%E9%99%90%E5%88%B6"><span class="toc-number">3.9.</span> <span class="toc-text">9. 调用频率限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E7%BC%96%E5%86%99%E6%96%87%E6%A1%A3"><span class="toc-number">3.10.</span> <span class="toc-text">10. 编写文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || '167bcc709551fa65bd2ad4510ae60aac'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

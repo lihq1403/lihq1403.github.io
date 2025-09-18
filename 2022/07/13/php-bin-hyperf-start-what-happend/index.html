@@ -1,0 +1,577 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>php bin/hyperf.php start 发生了啥 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="php bin/hyperf.php start 发生了啥 用了这么久的hyperf框架，还没细细研究过源码，先看看start，入个门  先安装一个脚手架吧 php 7.4 swoole 4.8.5 hyperf 2.2 - https://hyperf.wiki/2.2/#/1compose..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "php bin/hyperf.php start 发生了啥",
+  "url": "https://blog.lihq.xyz/2022/07/13/php-bin-hyperf-start-what-happend/",
+  "image": "https://blog-1256184194.file.myqcloud.com/img/202207/20220713-巨石中的巨石-bing.jpg",
+  "datePublished": "2022-07-13T15:30:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.967Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2022/07/13/php-bin-hyperf-start-what-happend/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'php bin/hyperf.php start 发生了啥',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/img/202207/20220713-巨石中的巨石-bing.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">php bin/hyperf.php start 发生了啥</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">php bin/hyperf.php start 发生了啥</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-13T15:30:00.000Z" title="发表于 2022-07-13 23:30:00">2022-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.967Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="php-bin-hyperf-php-start-发生了啥"><a href="#php-bin-hyperf-php-start-发生了啥" class="headerlink" title="php bin/hyperf.php start 发生了啥"></a>php bin/hyperf.php start 发生了啥</h1><blockquote>
+<p>用了这么久的hyperf框架，还没细细研究过源码，先看看start，入个门</p>
+</blockquote>
+<h2 id="先安装一个脚手架吧"><a href="#先安装一个脚手架吧" class="headerlink" title="先安装一个脚手架吧"></a>先安装一个脚手架吧</h2><ul>
+<li>php 7.4</li>
+<li>swoole 4.8.5</li>
+<li>hyperf 2.2 - <a target="_blank" rel="noopener" href="https://hyperf.wiki/2.2/#/">https://hyperf.wiki/2.2/#/</a><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project hyperf/hyperf-skeleton:2.2 study-hyperf</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="先直接运行一下，看看有啥变化"><a href="#先直接运行一下，看看有啥变化" class="headerlink" title="先直接运行一下，看看有啥变化"></a>先直接运行一下，看看有啥变化</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ php bin/hyperf.php</span><br></pre></td></tr></table></figure>
+
+<p>可以看到整个项目有一些些变化，在runtime下面生成了几个文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">runtime</span><br><span class="line">├── container</span><br><span class="line">│   ├── aspects.cache</span><br><span class="line">│   ├── classes.cache</span><br><span class="line">│   ├── proxy</span><br><span class="line">│   │   ├── App_Controller_AbstractController.proxy.php</span><br><span class="line">│   │   └── App_Controller_IndexController.proxy.php</span><br><span class="line">│   └── scan.cache</span><br><span class="line">└── hyperf.pid</span><br></pre></td></tr></table></figure>
+
+<p>得到几个疑问与猜想:</p>
+<ol>
+<li>aspects 切面？收集了项目内的切面信息？</li>
+<li>classes 类？收集了类的什么信息？什么类？</li>
+<li>scan 扫描？扫描了啥？结果又是啥？</li>
+<li>proxy 代理？难道说有文件被代理了？</li>
+<li>hyperf.pid pid？进程id吧？</li>
+</ol>
+<h2 id="入口文件"><a href="#入口文件" class="headerlink" title="入口文件"></a>入口文件</h2><blockquote>
+<p>bin/hyperf.php</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env php</span><br><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">ini_set(&#x27;display_errors&#x27;, &#x27;on&#x27;);</span><br><span class="line">ini_set(&#x27;display_startup_errors&#x27;, &#x27;on&#x27;);</span><br><span class="line">ini_set(&#x27;memory_limit&#x27;, &#x27;1G&#x27;);</span><br><span class="line"></span><br><span class="line">error_reporting(E_ALL);</span><br><span class="line"></span><br><span class="line">! defined(&#x27;BASE_PATH&#x27;) &amp;&amp; define(&#x27;BASE_PATH&#x27;, dirname(__DIR__, 1));</span><br><span class="line">! defined(&#x27;SWOOLE_HOOK_FLAGS&#x27;) &amp;&amp; define(&#x27;SWOOLE_HOOK_FLAGS&#x27;, SWOOLE_HOOK_ALL);</span><br><span class="line"></span><br><span class="line">require BASE_PATH . &#x27;/vendor/autoload.php&#x27;;</span><br><span class="line"></span><br><span class="line">// Self-called anonymous function that creates its own scope and keep the global namespace clean.</span><br><span class="line">(function () &#123;</span><br><span class="line">    Hyperf\Di\ClassLoader::init();</span><br><span class="line">    /** @var Psr\Container\ContainerInterface $container */</span><br><span class="line">    $container = require BASE_PATH . &#x27;/config/container.php&#x27;;</span><br><span class="line"></span><br><span class="line">    $application = $container-&gt;get(Hyperf\Contract\ApplicationInterface::class);</span><br><span class="line">    $application-&gt;run();</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li><code>error_reporting(E_ALL)</code> 报告所有PHP错误</li>
+<li><code>BASE_PATH</code> 太重要了，大部分文件扫描都用到它</li>
+<li><code>SWOOLE_HOOK_FLAGS</code> 一键协程化的常量配置，后面start用到 <a target="_blank" rel="noopener" href="https://wiki.swoole.com/#/runtime?id=swoole_hook_all">官方说明</a></li>
+<li><code>composer</code> 的自动加载</li>
+</ul>
+<h4 id="朴实无华的4步走"><a href="#朴实无华的4步走" class="headerlink" title="朴实无华的4步走"></a>朴实无华的4步走</h4><ol>
+<li>di加载器初始化</li>
+<li>加载容器container</li>
+<li>get app</li>
+<li>app run</li>
+</ol>
+<p>这里使用了<code>(function() &#123;&#125;)();</code>的写法，还没看懂为啥，上面说的是 创建自己的作用域并保持全局命名空间干净</p>
+<h2 id="Hyperf-Di-ClassLoader-init-di加载器初始化"><a href="#Hyperf-Di-ClassLoader-init-di加载器初始化" class="headerlink" title="Hyperf\Di\ClassLoader::init() di加载器初始化"></a>Hyperf\Di\ClassLoader::init() di加载器初始化</h2><h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><ol>
+<li>定义代理类目录 <code>$proxyFileDirPath</code></li>
+<li>定义配置目录 <code>$configDir</code></li>
+<li>定义扫描器 <code>$handler</code></li>
+<li>代理composer的加载器 <code>\Hyperf\Di\ClassLoader</code></li>
+<li>初始化懒加载 <code>\Hyperf\Di\LazyLoader\LazyLoader</code></li>
+</ol>
+<h3 id="不看细节，先看结果"><a href="#不看细节，先看结果" class="headerlink" title="不看细节，先看结果"></a>不看细节，先看结果</h3><blockquote>
+<p>万物皆可 var_dump($loaders);</p>
+</blockquote>
+<p>以下内容做了美化与省略，只保留了一些关键点</p>
+<p><strong>composer被代理前</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Array</span><br><span class="line">(</span><br><span class="line">    [0] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [0] =&gt; Composer\Autoload\ClassLoader Object</span><br><span class="line">                (</span><br><span class="line">                    [vendorDir:Composer\Autoload\ClassLoader:private] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor</span><br><span class="line">                    [prefixLengthsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [prefixDirsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [fallbackDirsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [prefixesPsr0:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [fallbackDirsPsr0:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [useIncludePath:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [classMap:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                        (</span><br><span class="line">                            [App\Controller\AbstractController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor/composer/../../app/Controller/AbstractController.php</span><br><span class="line">                            [App\Controller\IndexController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor/composer/../../app/Controller/IndexController.php</span><br><span class="line">                            。。。 略</span><br><span class="line">                        )</span><br><span class="line">                    [classMapAuthoritative:Composer\Autoload\ClassLoader:private] =&gt;</span><br><span class="line">                    [missingClasses:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                    [apcuPrefix:Composer\Autoload\ClassLoader:private] =&gt;</span><br><span class="line">                )</span><br><span class="line">            [1] =&gt; loadClass</span><br><span class="line">        )</span><br><span class="line">    [1] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [0] =&gt; PHPStan\PharAutoloader</span><br><span class="line">            [1] =&gt; loadClass</span><br><span class="line">        )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>当前被<code>spl_autoload_register</code>的</p>
+<ul>
+<li><code>Composer\Autoload\ClassLoader@loadClass()</code></li>
+<li><code>PHPStan\PharAutoloader@loadClass()</code></li>
+</ul>
+<p><strong>composer被代理后</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">Array</span><br><span class="line">(</span><br><span class="line">    [0] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [0] =&gt; Hyperf\Di\LazyLoader\LazyLoader Object</span><br><span class="line">                (</span><br><span class="line">                    [registered:protected] =&gt; 1</span><br><span class="line">                    [config:protected] =&gt; Array</span><br><span class="line">                        (</span><br><span class="line">                        )</span><br><span class="line"></span><br><span class="line">                )</span><br><span class="line"></span><br><span class="line">            [1] =&gt; load</span><br><span class="line">        )</span><br><span class="line">    [1] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [0] =&gt; Hyperf\Di\ClassLoader Object</span><br><span class="line">                (</span><br><span class="line">                    [composerClassLoader:protected] =&gt; Composer\Autoload\ClassLoader Object</span><br><span class="line">                        (</span><br><span class="line">                            [vendorDir:Composer\Autoload\ClassLoader:private] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor</span><br><span class="line">                            [prefixLengthsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [prefixDirsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [fallbackDirsPsr4:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [prefixesPsr0:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [fallbackDirsPsr0:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [useIncludePath:Composer\Autoload\ClassLoader:private] =&gt;</span><br><span class="line">                            [classMap:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                                (</span><br><span class="line">                                    [App\Controller\AbstractController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor/composer/../../app/Controller/AbstractController.php</span><br><span class="line">                                    [App\Controller\IndexController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/vendor/composer/../../app/Controller/IndexController.php</span><br><span class="line">                                    。。。 略</span><br><span class="line">                                )</span><br><span class="line">                            [classMapAuthoritative:Composer\Autoload\ClassLoader:private] =&gt; </span><br><span class="line">                            [missingClasses:Composer\Autoload\ClassLoader:private] =&gt; Array</span><br><span class="line">                            [apcuPrefix:Composer\Autoload\ClassLoader:private] =&gt;</span><br><span class="line">                        )</span><br><span class="line"></span><br><span class="line">                    [proxies:protected] =&gt; Array</span><br><span class="line">                        (</span><br><span class="line">                            [App\Controller\AbstractController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/runtime/container/proxy/App_Controller_AbstractController.proxy.php</span><br><span class="line">                            [App\Controller\IndexController] =&gt; /Users/lihq1403/workspace/self/study-hyperf/runtime/container/proxy/App_Controller_IndexController.proxy.php</span><br><span class="line">                        )</span><br><span class="line">                )</span><br><span class="line">            [1] =&gt; loadClass</span><br><span class="line">        )</span><br><span class="line">    [2] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [0] =&gt; PHPStan\PharAutoloader</span><br><span class="line">            [1] =&gt; loadClass</span><br><span class="line">        )</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当前被<code>spl_autoload_register</code>的</p>
+<ul>
+<li><code>Hyperf\Di\LazyLoader\LazyLoader@load()</code></li>
+<li><code>Hyperf\Di\ClassLoader@loadClass()</code></li>
+<li><code>PHPStan\PharAutoloader@loadClass()</code></li>
+</ul>
+<p>可以明显的看到，<code>spl_autoload_register</code>注册的东西被替换了，多了一个proxies的classmap，这不就是被代理的那两个类，看来以后加载这俩的时候，都去到了代理类</p>
+<h3 id="先看Hyperf-Di-ClassLoader-loadClass"><a href="#先看Hyperf-Di-ClassLoader-loadClass" class="headerlink" title="先看Hyperf\Di\ClassLoader@loadClass()"></a>先看<code>Hyperf\Di\ClassLoader@loadClass()</code></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public function loadClass(string $class): void</span><br><span class="line">&#123;</span><br><span class="line">    $path = $this-&gt;locateFile($class);</span><br><span class="line"></span><br><span class="line">    if ($path) &#123;</span><br><span class="line">        include $path;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">protected function locateFile(string $className): ?string</span><br><span class="line">&#123;</span><br><span class="line">    if (isset($this-&gt;proxies[$className]) &amp;&amp; file_exists($this-&gt;proxies[$className])) &#123;</span><br><span class="line">        $file = $this-&gt;proxies[$className];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $file = $this-&gt;getComposerClassLoader()-&gt;findFile($className);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return is_string($file) ? $file : null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>果然，在进行自动加载的时候，先判断了是否在proxies里面。如果不在，走composer的老路。如果存在，则加载代理类</li>
+</ul>
+<h3 id="深入Proxy-the-composer-class-loader"><a href="#深入Proxy-the-composer-class-loader" class="headerlink" title="深入Proxy the composer class loader"></a>深入<code>Proxy the composer class loader</code></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">foreach ($loaders as &amp;$loader) &#123;</span><br><span class="line">    $unregisterLoader = $loader;</span><br><span class="line">    if (is_array($loader) &amp;&amp; $loader[0] instanceof ComposerClassLoader) &#123;</span><br><span class="line">        /** @var ComposerClassLoader $composerClassLoader */</span><br><span class="line">        $composerClassLoader = $loader[0];</span><br><span class="line">        AnnotationRegistry::registerLoader(function ($class) use ($composerClassLoader) &#123;</span><br><span class="line">            return (bool) $composerClassLoader-&gt;findFile($class);</span><br><span class="line">        &#125;);</span><br><span class="line">        $loader[0] = new static($composerClassLoader, $proxyFileDirPath, $configDir, $handler);</span><br><span class="line">    &#125;</span><br><span class="line">    spl_autoload_unregister($unregisterLoader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里只对<code>ComposerClassLoader</code>做了处理，<code>AnnotationRegistry::registerLoader</code>是为了<code>doctrine/annotations</code>注解扫描做准备的</p>
+<blockquote>
+<p>在hyperf3的版本，弃用了phpdoc的注解模式，所以AnnotationRegistry::registerLoader也就没有了</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public function __construct(ComposerClassLoader $classLoader, string $proxyFileDir, string $configDir, ScanHandlerInterface $handler)</span><br><span class="line">&#123;</span><br><span class="line">    $this-&gt;setComposerClassLoader($classLoader);</span><br><span class="line">    if (file_exists(BASE_PATH . &#x27;/.env&#x27;)) &#123;</span><br><span class="line">        $this-&gt;loadDotenv();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Scan by ScanConfig to generate the reflection class map</span><br><span class="line">    $config = ScanConfig::instance($configDir);</span><br><span class="line">    $classLoader-&gt;addClassMap($config-&gt;getClassMap());</span><br><span class="line"></span><br><span class="line">    $scanner = new Scanner($this, $config, $handler);</span><br><span class="line"></span><br><span class="line">    $this-&gt;proxies = $scanner-&gt;scan($this-&gt;getComposerClassLoader()-&gt;getClassMap(), $proxyFileDir);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-设置composer的老路"><a href="#1-设置composer的老路" class="headerlink" title="1. 设置composer的老路"></a>1. 设置composer的老路</h4><ul>
+<li>这里除了保留composer原有的loader，还初始化了<code>\Hyperf\Utils\Composer</code>，后续再看</li>
+</ul>
+<h4 id="2-加载-env"><a href="#2-加载-env" class="headerlink" title="2. 加载 .env"></a>2. 加载 .env</h4><ul>
+<li>也就是说，env函数，要在这一行之后才会生效，env的加载，使用了 <code>vlucas/phpdotenv</code></li>
+<li>如果我们的项目需要在不同的时候，读取不同的env，看了这里，就简单了，比如，BASE_PATH . ‘/.env’ 可以不存在，然后在启动文件自己一个Dotenv加载就行</li>
+</ul>
+<h4 id="3-获取配置，每个包的ConfigProvider和config目录下-合并成一个Hyperf-Di-Annotation-ScanConfig"><a href="#3-获取配置，每个包的ConfigProvider和config目录下-合并成一个Hyperf-Di-Annotation-ScanConfig" class="headerlink" title="3. 获取配置，每个包的ConfigProvider和config目录下 合并成一个Hyperf\Di\Annotation\ScanConfig"></a>3. 获取配置，每个包的<code>ConfigProvider</code>和<code>config</code>目录下 合并成一个<code>Hyperf\Di\Annotation\ScanConfig</code></h4><h5 id="每一个ConfigProvider都需要有-invoke才能生效，也就是说，这里可以去执行一些东东"><a href="#每一个ConfigProvider都需要有-invoke才能生效，也就是说，这里可以去执行一些东东" class="headerlink" title="每一个ConfigProvider都需要有__invoke才能生效，也就是说，这里可以去执行一些东东"></a>每一个ConfigProvider都需要有__invoke才能生效，也就是说，这里可以去执行一些东东</h5><ul>
+<li><code>\Hyperf\Di\ConfigProvider</code> 果然di包，就写了一些特殊执行，但我觉得这<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Register AST visitors to the collector.</span><br><span class="line">if (! AstVisitorRegistry::exists(PropertyHandlerVisitor::class)) &#123;</span><br><span class="line">    AstVisitorRegistry::insert(PropertyHandlerVisitor::class, PHP_INT_MAX / 2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (! AstVisitorRegistry::exists(ProxyCallVisitor::class)) &#123;</span><br><span class="line">    AstVisitorRegistry::insert(ProxyCallVisitor::class, PHP_INT_MAX / 2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Register Property Handler.</span><br><span class="line">RegisterInjectPropertyHandler::register();</span><br></pre></td></tr></table></figure></li>
+<li>往<code>AstVisitorRegistry</code>优先队列里面丢了两个代理类处理器</li>
+<li><code>PropertyHandlerVisitor</code> 在__construct里处理属性的注解 <code>use \Hyperf\Di\Aop\PropertyHandlerTrait;</code></li>
+<li><code>ProxyCallVisitor</code> 每个方法添加特殊的<code>__proxyCall</code>，<code>use \Hyperf\Di\Aop\ProxyTrait;</code></li>
+<li>往<code>PropertyHandlerManager</code>注册了一个<code>Inject</code>的回调函数，后面有大用。简单的说，就是把当前注解里面映射的类，从容器里面取出来</li>
+</ul>
+<h5 id="合并ConfigProvider和config的配置"><a href="#合并ConfigProvider和config的配置" class="headerlink" title="合并ConfigProvider和config的配置"></a>合并ConfigProvider和config的配置</h5><ul>
+<li>获取所有的annotations配置，即<code>paths 需要扫描的目录</code>，<code>ignore_annotations 忽略的注解</code>，<code>collectors 收集器</code>，<code>class_map 替换加载的类</code>，<code>global_imports</code></li>
+<li>获取所有定义的<code>dependencies DI的依赖关系和类对应关系</code></li>
+<li>获取<code>scan_cacheable</code>，扫描时是否使用缓存</li>
+</ul>
+<p>这里内置的collectors有</p>
+<ul>
+<li>Hyperf\Cache\CacheListenerCollector</li>
+<li>Hyperf\Di\Annotation\AnnotationCollector 注解收集</li>
+<li>Hyperf\Di\Annotation\AspectCollector 切面收集</li>
+<li>Hyperf\ModelListener\Collector\ListenerCollector</li>
+</ul>
+<h5 id="将上面获取到的数据，初始化-Hyperf-Di-Annotation-ScanConfig"><a href="#将上面获取到的数据，初始化-Hyperf-Di-Annotation-ScanConfig" class="headerlink" title="将上面获取到的数据，初始化\Hyperf\Di\Annotation\ScanConfig"></a>将上面获取到的数据，初始化<code>\Hyperf\Di\Annotation\ScanConfig</code></h5><h4 id="4-添加composer的ClassMap"><a href="#4-添加composer的ClassMap" class="headerlink" title="4. 添加composer的ClassMap"></a>4. 添加composer的ClassMap</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://hyperf.wiki/2.2/#/zh-cn/annotation?id=classmap-%e5%8a%9f%e8%83%bd">https://hyperf.wiki/2.2/#/zh-cn/annotation?id=classmap-%e5%8a%9f%e8%83%bd</a></li>
+</ul>
+<h4 id="4-初始化注解扫描器-Hyperf-Di-Annotation-Scanner"><a href="#4-初始化注解扫描器-Hyperf-Di-Annotation-Scanner" class="headerlink" title="4. 初始化注解扫描器\Hyperf\Di\Annotation\Scanner"></a>4. 初始化注解扫描器<code>\Hyperf\Di\Annotation\Scanner</code></h4><ul>
+<li>添加忽略注解与全局导入</li>
+</ul>
+<h4 id="5-扫扫扫"><a href="#5-扫扫扫" class="headerlink" title="5. 扫扫扫"></a>5. 扫扫扫</h4><h5 id="使用缓存"><a href="#使用缓存" class="headerlink" title="使用缓存"></a>使用缓存</h5><ul>
+<li>文件存在，并且缓存配置是开启的，那么直接读取<code>scan.cache</code></li>
+<li>给每个<code>collector</code>添加扫描结果</li>
+</ul>
+<h5 id="fork子进程进行扫描"><a href="#fork子进程进行扫描" class="headerlink" title="fork子进程进行扫描"></a>fork子进程进行扫描</h5><blockquote>
+<p>通过子进程来完成缓存文件的生成，巧妙的避开了spl_autoload_register下会污染当前父进程的autoload的弊端。通过子进程完成扫描动作，传递结果文件给父进程，父进程直接进行自动加载即可。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$scanned = $this-&gt;handler-&gt;scan();</span><br></pre></td></tr></table></figure>
+
+<p>当不传入handler时，使用默认的<code>\Hyperf\Di\ScanHandler\PcntlScanHandler</code>，先进行 <code>pcntl_fork</code>之后父进程一直等待<code>pcntl_wait</code>子进程结束。也就是说，这个地方的$scanned，其实会返回两次，一次在父进程里(true)，一次在子进程里(false)</p>
+<h5 id="scanned-false-子进程"><a href="#scanned-false-子进程" class="headerlink" title="$scanned === false 子进程"></a>$scanned === false 子进程</h5><h6 id="再次运行-this-gt-deserializeCachedScanData-collectors"><a href="#再次运行-this-gt-deserializeCachedScanData-collectors" class="headerlink" title="再次运行$this-&gt;deserializeCachedScanData($collectors);"></a>再次运行<code>$this-&gt;deserializeCachedScanData($collectors);</code></h6><ul>
+<li>没有<code>scan.cache</code>时，不做处理</li>
+<li>有<code>scan.cache</code>时，$collectors存入上次扫描的结果</li>
+</ul>
+<h6 id="初始化-Hyperf-Di-Annotation-AnnotationReader"><a href="#初始化-Hyperf-Di-Annotation-AnnotationReader" class="headerlink" title="初始化 \Hyperf\Di\Annotation\AnnotationReader"></a>初始化 \Hyperf\Di\Annotation\AnnotationReader</h6><ul>
+<li>todo</li>
+</ul>
+<h6 id="获取所有的反射类"><a href="#获取所有的反射类" class="headerlink" title="获取所有的反射类"></a>获取所有的反射类</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$classes = ReflectionManager::getAllClasses($paths);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>扫描目录下的所有php文件</li>
+<li>解析文件内容，如果是class，就反射</li>
+<li>形成一个所有反射类的数组映射</li>
+</ul>
+<h6 id="清理-collectors被移除的class"><a href="#清理-collectors被移除的class" class="headerlink" title="清理$collectors被移除的class"></a>清理$collectors被移除的class</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;clearRemovedClasses($collectors, $classes);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个地方总是生成最新反射类扫描结果 <code>classes.cache</code></li>
+<li>没有<code>classes.cache</code>时，array_diff不会有结果，也就不做处理</li>
+<li>有<code>classes.cache</code>时，比较上次与现在的区别，$collectors清理被移除的类</li>
+</ul>
+<h6 id="清理修改过的类文件"><a href="#清理修改过的类文件" class="headerlink" title="清理修改过的类文件"></a>清理修改过的类文件</h6><ul>
+<li>循环所有的反射类 $classes</li>
+<li>如果文件修改时间大于<code>scan.cache</code>文件修改时间，即上次扫描时间，那么就清理$collectors中的当前类，重新收集该类的信息</li>
+</ul>
+<h6 id="收集注解的信息"><a href="#收集注解的信息" class="headerlink" title="收集注解的信息"></a>收集注解的信息</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;collect($annotationReader, $reflectionClass);</span><br></pre></td></tr></table></figure>
+
+<p>普通注解<code>\Hyperf\Di\Annotation\AbstractAnnotation</code></p>
+<ul>
+<li>只是保存注解到<code>AnnotationCollector</code></li>
+<li>AnnotationCollector::collectClass($className, static::class, $this);</li>
+<li>AnnotationCollector::collectProperty($className, $target, static::class, $this);</li>
+<li>AnnotationCollector::collectMethod($className, $target, static::class, $this);</li>
+</ul>
+<p><strong>1. 解析class的注解</strong></p>
+<blockquote>
+<p>public function collectClass(string $className): void;</p>
+</blockquote>
+<p>用<code>\Hyperf\Di\Annotation\Aspect</code>作为特殊例子</p>
+<ul>
+<li>先保存注解到<code>AnnotationCollector</code> 注解收集器  [_c]</li>
+<li><code>AspectLoader::load($className);</code> 用于获取注解里面的配置信息</li>
+<li>通过代码可以发现，类的配置优先于注解的配置</li>
+<li>保存注解的配置到<code>AspectCollector</code> 切面收集器</li>
+</ul>
+<p><strong>2. 解析property的注解</strong></p>
+<blockquote>
+<p>public function collectProperty(string $className, ?string $target): void;</p>
+</blockquote>
+<p>用<code>\Hyperf\Di\Annotation\Inject</code>作为特殊例子</p>
+<ul>
+<li>获取注入的类，优先通过反射获取<code>$reflectionProperty-&gt;getType()-&gt;getName()</code>，再通过phpdoc去获取</li>
+<li>如果是lazy===true，那么在注入类前面加上<code>&#39;HyperfLazy\\&#39;</code>前缀，用于标记该类为懒加载</li>
+<li>保存注解到<code>AnnotationCollector</code> 注解收集器  [_p]</li>
+</ul>
+<p><strong>3. 解析method的注解</strong></p>
+<blockquote>
+<p>public function collectMethod(string $className, ?string $target): void;</p>
+</blockquote>
+<p>用<code>\Hyperf\Cache\Annotation\Cacheable</code>作为特殊例子</p>
+<ul>
+<li>如果有listener，则添加<code>CacheListenerCollector</code></li>
+<li>保存注解到<code>AnnotationCollector</code> 注解收集器 [_m]</li>
+</ul>
+<h6 id="加载配置文件的切面"><a href="#加载配置文件的切面" class="headerlink" title="加载配置文件的切面"></a>加载配置文件的切面</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;loadAspects($lastCacheModified);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>先合并ConfigProvider、config.php、config/aspect.php的配置，得到最终的<code>$aspects</code></li>
+<li><code>getChangedAspects</code>出现了<code>aspects.cache</code>，可以看出config/aspect.php配置的无法定义优先级</li>
+<li>获取移除和修改的切面</li>
+<li>接下来跟<code>\Hyperf\Di\Annotation\Aspect</code>注解的收集是一样的</li>
+</ul>
+<h6 id="生成代理类"><a href="#生成代理类" class="headerlink" title="生成代理类"></a>生成代理类</h6><p><strong>1. 通过反射类初始化代理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;initProxiesByReflectionClassMap($this-&gt;classMap)</span><br></pre></td></tr></table></figure>
+<p>需要生成代理类的有两种文件</p>
+<ul>
+<li>文件是被切面的class，如</li>
+<li>文件内有被切面的annotations</li>
+</ul>
+<p>遍历所有的classmap，符合上述条件的类，最后都放到<code>$proxies</code>中，示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">array(2) &#123;</span><br><span class="line">  [&quot;App\Controller\AbstractController&quot;]=&gt;</span><br><span class="line">  array(1) &#123;</span><br><span class="line">    [0]=&gt;</span><br><span class="line">    string(33) &quot;Hyperf\Di\Annotation\InjectAspect&quot;</span><br><span class="line">  &#125;</span><br><span class="line">  [&quot;App\Controller\IndexController&quot;]=&gt;</span><br><span class="line">  array(1) &#123;</span><br><span class="line">    [0]=&gt;</span><br><span class="line">    string(33) &quot;Hyperf\Di\Annotation\InjectAspect&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 生成代理文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;generateProxyFiles()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里的是使用<code>nikic/php-parser</code>生成代理类文件，贼强大</li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ST411u7rk">https://www.bilibili.com/video/BV1ST411u7rk</a>  李铭昕大佬的aop讲解</li>
+</ul>
+<h6 id="生成扫描缓存-scan-cache"><a href="#生成扫描缓存-scan-cache" class="headerlink" title="生成扫描缓存 scan.cache"></a>生成扫描缓存 scan.cache</h6><ul>
+<li>生成扫描缓存文件，父进程要读这个文件</li>
+<li>exit标志着该子进程结束</li>
+</ul>
+<h5 id="scanned-true-父进程"><a href="#scanned-true-父进程" class="headerlink" title="$scanned === true 父进程"></a>$scanned === true 父进程</h5><ul>
+<li>读取<code>scan.cache</code></li>
+<li>给每个<code>collector</code>添加扫描结果</li>
+</ul>
+<h3 id="LazyLoader"><a href="#LazyLoader" class="headerlink" title="LazyLoader"></a>LazyLoader</h3><ul>
+<li>注册了一个自动加载，优先级置顶 <code>\Hyperf\Di\LazyLoader\LazyLoader::load</code></li>
+<li>加载类时，如果配置文件存在或者是HyperfLazy开头的类，才会进行代理类的生成，而不是一开始就生成，大部分情况下，是请求过来的时候，这个类才会走上面的一些步骤去生成代理</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>代理composer加载器</li>
+<li>注解收集器</li>
+<li>切面收集器</li>
+<li><strong>生成代理类</strong>。这一步决定着hyperf的注解与切面的实现</li>
+<li>懒加载优先</li>
+</ul>
+<h2 id="加载容器container"><a href="#加载容器container" class="headerlink" title="加载容器container"></a>加载容器container</h2><h3 id="定义源工厂"><a href="#定义源工厂" class="headerlink" title="定义源工厂"></a>定义源工厂</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(new DefinitionSourceFactory(true))()</span><br></pre></td></tr></table></figure>
+
+<h4 id="先看结果"><a href="#先看结果" class="headerlink" title="先看结果"></a>先看结果</h4><p>这里是把ConfigProvider和config/auto/dependencies.php合并起来，进行DI源的初始化</p>
+<p>看下source，这里只截取了<code>ApplicationInterface</code>和<code>StdoutLoggerInterface</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">array(22) &#123;</span><br><span class="line">。。。略</span><br><span class="line">  [&quot;Hyperf\Contract\ApplicationInterface&quot;]=&gt;</span><br><span class="line">  string(35) &quot;Hyperf\Framework\ApplicationFactory&quot;</span><br><span class="line">  [&quot;Hyperf\Contract\StdoutLoggerInterface&quot;]=&gt;</span><br><span class="line">  string(36) &quot;Hyperf\Framework\Logger\StdoutLogger&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过autowire之后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">array(22) &#123;</span><br><span class="line">。。。略</span><br><span class="line">  [&quot;Hyperf\Contract\ApplicationInterface&quot;]=&gt;</span><br><span class="line">  object(Hyperf\Di\Definition\FactoryDefinition)#73 (4) &#123;</span><br><span class="line">    [&quot;name&quot;:&quot;Hyperf\Di\Definition\FactoryDefinition&quot;:private]=&gt;</span><br><span class="line">    string(36) &quot;Hyperf\Contract\ApplicationInterface&quot;</span><br><span class="line">    [&quot;factory&quot;:&quot;Hyperf\Di\Definition\FactoryDefinition&quot;:private]=&gt;</span><br><span class="line">    string(35) &quot;Hyperf\Framework\ApplicationFactory&quot;</span><br><span class="line">    [&quot;parameters&quot;:&quot;Hyperf\Di\Definition\FactoryDefinition&quot;:private]=&gt;</span><br><span class="line">    array(0) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [&quot;needProxy&quot;:&quot;Hyperf\Di\Definition\FactoryDefinition&quot;:private]=&gt;</span><br><span class="line">    bool(false)</span><br><span class="line">  &#125;</span><br><span class="line">  [&quot;Hyperf\Contract\StdoutLoggerInterface&quot;]=&gt;</span><br><span class="line">  object(Hyperf\Di\Definition\ObjectDefinition)#74 (5) &#123;</span><br><span class="line">    [&quot;constructorInjection&quot;:protected]=&gt;</span><br><span class="line">    object(Hyperf\Di\Definition\MethodInjection)#77 (2) &#123;</span><br><span class="line">      [&quot;methodName&quot;:&quot;Hyperf\Di\Definition\MethodInjection&quot;:private]=&gt;</span><br><span class="line">      string(11) &quot;__construct&quot;</span><br><span class="line">      [&quot;parameters&quot;:&quot;Hyperf\Di\Definition\MethodInjection&quot;:private]=&gt;</span><br><span class="line">      array(1) &#123;</span><br><span class="line">        [0]=&gt;</span><br><span class="line">        object(Hyperf\Di\Definition\Reference)#81 (3) &#123;</span><br><span class="line">          [&quot;name&quot;:&quot;Hyperf\Di\Definition\Reference&quot;:private]=&gt;</span><br><span class="line">          string(0) &quot;&quot;</span><br><span class="line">          [&quot;targetEntryName&quot;:&quot;Hyperf\Di\Definition\Reference&quot;:private]=&gt;</span><br><span class="line">          string(31) &quot;Hyperf\Contract\ConfigInterface&quot;</span><br><span class="line">          [&quot;needProxy&quot;:&quot;Hyperf\Di\Definition\Reference&quot;:private]=&gt;</span><br><span class="line">          bool(false)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    [&quot;name&quot;:&quot;Hyperf\Di\Definition\ObjectDefinition&quot;:private]=&gt;</span><br><span class="line">    string(37) &quot;Hyperf\Contract\StdoutLoggerInterface&quot;</span><br><span class="line">    [&quot;className&quot;:&quot;Hyperf\Di\Definition\ObjectDefinition&quot;:private]=&gt;</span><br><span class="line">    string(36) &quot;Hyperf\Framework\Logger\StdoutLogger&quot;</span><br><span class="line">    [&quot;classExists&quot;:&quot;Hyperf\Di\Definition\ObjectDefinition&quot;:private]=&gt;</span><br><span class="line">    bool(true)</span><br><span class="line">    [&quot;instantiable&quot;:&quot;Hyperf\Di\Definition\ObjectDefinition&quot;:private]=&gt;</span><br><span class="line">    bool(true)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>猜想：通过上面的结果可以看到，di做了一个映射，后续再get的时候，应该就是用里面的值</p>
+<h4 id="normalizeDefinition-规范化di"><a href="#normalizeDefinition-规范化di" class="headerlink" title="normalizeDefinition 规范化di"></a>normalizeDefinition 规范化di</h4><ul>
+<li>类里面存在<code>__invoke</code>或者是<code>匿名函数</code>，那使用<code>\Hyperf\Di\Definition\FactoryDefinition</code>初始化</li>
+<li>其余都是<code>\Hyperf\Di\Definition\ObjectDefinition</code></li>
+<li>类里面的__construct，会生成<code>\Hyperf\Di\Definition\MethodInjection</code></li>
+<li>__construct里面的参数，会生成<code>Hyperf\Di\Definition\Reference</code></li>
+</ul>
+<h4 id="将规范化的di，注入到容器"><a href="#将规范化的di，注入到容器" class="headerlink" title="将规范化的di，注入到容器"></a>将规范化的di，注入到容器</h4><ul>
+<li>definitionSource 上面的normalizeDefinition</li>
+<li>definitionResolver 解析调度器，那几个Definition的调度器</li>
+<li>resolvedEntries 已经解决的依赖</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>初始化di，定义好dependencies源</li>
+<li>利用初始化的di生成容器</li>
+<li>容器很强大，等会用ApplicationInterface来示例是如何从容器中get</li>
+<li>在这之后，就已经可以通过容器去get其他类了，di会帮你完成一切</li>
+</ul>
+<h2 id="get-获取application"><a href="#get-获取application" class="headerlink" title="get 获取application"></a>get 获取application</h2><blockquote>
+<p>这里将会展示di是如何运行的</p>
+</blockquote>
+<ul>
+<li>了解过依赖注入相关知识的，其实每个框架都差不多</li>
+<li><a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel-core-concept/5.5/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5,%E6%8E%A7%E5%88%B6%E7%BF%BB%E8%BD%AC,%E5%8F%8D%E5%B0%84/3017">https://learnku.com/docs/laravel-core-concept/5.5/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5,%E6%8E%A7%E5%88%B6%E7%BF%BB%E8%BD%AC,%E5%8F%8D%E5%B0%84/3017</a> 可以看下laravel的一些示例</li>
+<li>简单的来说，就是拿到构造中的类去反射出来，递归实现make</li>
+</ul>
+<h3 id="get"><a href="#get" class="headerlink" title="get()"></a>get()</h3><p>判断是否已经解决过依赖了，如果有，就直接返回</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (isset($this-&gt;resolvedEntries[$name]) || array_key_exists($name, $this-&gt;resolvedEntries)) &#123;</span><br><span class="line">    return $this-&gt;resolvedEntries[$name];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的写法很有意思，isset和array_key_exists都有用上</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000016613073">https://segmentfault.com/a/1190000016613073</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3210935/whats-the-difference-between-isset-and-array-key-exists">https://stackoverflow.com/questions/3210935/whats-the-difference-between-isset-and-array-key-exists</a></li>
+<li>简单的说，就是isset性能优于array_key_exists，但是isset为null时，就false了，所以为了保证数据的有效性与性能，中和使用得出的方案</li>
+</ul>
+<h3 id="make"><a href="#make" class="headerlink" title="make()"></a>make()</h3><p><strong>1. 先获取di源，主要是为了那些未加载到dependencies源的类</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$definition = $this-&gt;getDefinition($name);</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 依赖注入解决</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;resolveDefinition($definition, $parameters);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>先是\Hyperf\Di\Resolver\ResolverDispatcher::resolve，这里了定义一个<code>DepthGuard 递归深度</code><br>是为了防止出现死循环，依赖注入的时候，有时候会写出循环依赖的问题，这里定义了最大深度为500，也就是说，我们项目里面如果有超过500层的di，也不会执行成功。哈哈哈哈，项目里面应该不会出现吧</p>
+</li>
+<li><p>进行强大的di，细节就不展示了，反射拿到定义源，继续get的时候，又会回到ObjectDefinition，递归一直new下去，实例化所有的__construct参数，直到构造里面再也没有DefinitionInterface为止</p>
+</li>
+<li><p>如果是一个FactoryDefinition形式的类，那么在解析的时候，是执行了factory的__invoke</p>
+</li>
+<li><p>简单的说，di就是一个递归、反射、实例的过程，利用程序，实现构造自动注入</p>
+</li>
+<li><p>在hyperf里面，aop和annotations，是利用代理类进行操作的，代理类里面的__construct也会定义好依赖的类，再利用di进行一个get</p>
+</li>
+</ul>
+<blockquote>
+<p>所以ApplicationInterface在get的时候，实际上是运行了\Hyperf\Framework\ApplicationFactory::__invoke()方法来生成一个Application</p>
+</blockquote>
+<h3 id="ApplicationFactory的创建"><a href="#ApplicationFactory的创建" class="headerlink" title="ApplicationFactory的创建"></a>ApplicationFactory的创建</h3><p><strong>1. 触发\Hyperf\Framework\Event\BootApplication事件</strong></p>
+<p>搜索源码发现，有这几个内置的监听</p>
+<ul>
+<li>\Hyperf\Config\Listener\RegisterPropertyHandlerListener 注册了一个Value注解的回调</li>
+<li>\Hyperf\DbConnection\Listener\RegisterConnectionResolverListener 注册数据库连接解析器</li>
+<li>\Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler 设置用户自定义的错误处理函数，规定发生错误时运行的函数</li>
+<li>\Hyperf\ExceptionHandler\Listener\ExceptionHandlerListener 利用优先队列注册了异常处理器</li>
+</ul>
+<p><strong>2. command命令</strong></p>
+<ul>
+<li>注解和配置文件合并</li>
+<li>利用symfony/console组件，注册所有的command</li>
+</ul>
+<blockquote>
+<p>这一步骤，已经结束了php bin/hyperf.php</p>
+</blockquote>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>从容器中获取Application</li>
+<li>注册命令行</li>
+</ul>
+<h2 id="Start"><a href="#Start" class="headerlink" title="Start"></a>Start</h2><blockquote>
+<p>从command命令得知，start的文件为Hyperf\Server\Command\StartServer</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">protected function execute(InputInterface $input, OutputInterface $output)</span><br><span class="line">&#123;</span><br><span class="line">    // 检查当前环境是否满足swoole运行</span><br><span class="line">    $this-&gt;checkEnvironment($output);</span><br><span class="line"></span><br><span class="line">    // 初始化 服务工厂</span><br><span class="line">    $serverFactory = $this-&gt;container-&gt;get(ServerFactory::class)</span><br><span class="line">        -&gt;setEventDispatcher($this-&gt;container-&gt;get(EventDispatcherInterface::class))</span><br><span class="line">        -&gt;setLogger($this-&gt;container-&gt;get(StdoutLoggerInterface::class));</span><br><span class="line"></span><br><span class="line">    // 加载 服务配置</span><br><span class="line">    $serverConfig = $this-&gt;container-&gt;get(ConfigInterface::class)-&gt;get(&#x27;server&#x27;, []);</span><br><span class="line">    if (! $serverConfig) &#123;</span><br><span class="line">        throw new InvalidArgumentException(&#x27;At least one server should be defined.&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 通过配置初始化 服务</span><br><span class="line">    $serverFactory-&gt;configure($serverConfig);</span><br><span class="line"></span><br><span class="line">    // 一键化协程</span><br><span class="line">    Coroutine::set([&#x27;hook_flags&#x27; =&gt; swoole_hook_flags()]);</span><br><span class="line"></span><br><span class="line">    // 启动服务</span><br><span class="line">    $serverFactory-&gt;start();</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务配置-Hyperf-Server-ServerConfig"><a href="#服务配置-Hyperf-Server-ServerConfig" class="headerlink" title="服务配置 \Hyperf\Server\ServerConfig"></a>服务配置 \Hyperf\Server\ServerConfig</h3><p>相当于把 config/autoload/server.php 转化为类 (实体？)，方便获取与操作</p>
+<p>具体要启动什么服务，都是靠着这个配置文件进行，默认的server启动方式是\Hyperf\Server\Server</p>
+<ul>
+<li>\Hyperf\Server\Server <a target="_blank" rel="noopener" href="https://wiki.swoole.com/#/server/init">异步风格</a></li>
+<li>\Hyperf\Server\CoroutineServer <a target="_blank" rel="noopener" href="https://hyperf.wiki/2.2/#/zh-cn/coroutine-server?id=%e5%8d%8f%e7%a8%8b%e9%a3%8e%e6%a0%bc%e6%9c%8d%e5%8a%a1">协程风格服务</a></li>
+<li>\Hyperf\Server\SwowServer 最新的swow</li>
+</ul>
+<h3 id="初始化服务-Hyperf-Server-Server-initServers"><a href="#初始化服务-Hyperf-Server-Server-initServers" class="headerlink" title="初始化服务 \Hyperf\Server\Server::initServers"></a>初始化服务 \Hyperf\Server\Server::initServers</h3><p>遍历服务配置，一个一个实例相应的类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">switch ($type) &#123;</span><br><span class="line">    case ServerInterface::SERVER_HTTP:</span><br><span class="line">        return new SwooleHttpServer($host, $port, $mode, $sockType);</span><br><span class="line">    case ServerInterface::SERVER_WEBSOCKET:</span><br><span class="line">        return new SwooleWebSocketServer($host, $port, $mode, $sockType);</span><br><span class="line">    case ServerInterface::SERVER_BASE:</span><br><span class="line">        return new SwooleServer($host, $port, $mode, $sockType);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注册一些swoole的事件</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://wiki.swoole.com/#/server/events">https://wiki.swoole.com/#/server/events</a></p>
+</blockquote>
+<ul>
+<li>start事件 [Hyperf\Framework\Bootstrap\StartCallback, onStart]</li>
+<li>managerStart事件 [Hyperf\Framework\Bootstrap\ManagerStartCallback, onManagerStart]</li>
+<li>workerStart事件 [Hyperf\Framework\Bootstrap\WorkerStartCallback, onWorkerStart]</li>
+<li>workerStop事件 [Hyperf\Framework\Bootstrap\WorkerStopCallback, onWorkerStop]</li>
+<li>workerExit事件 [Hyperf\Framework\Bootstrap\WorkerExitCallback, onWorkerExit]</li>
+<li>pipeMessage事件 [Hyperf\Framework\Bootstrap\PipeMessageCallback, onPipeMessage]</li>
+<li>request事件 [Hyperf\HttpServer\Server, onRequest]</li>
+</ul>
+<h3 id="request事件-Hyperf-HttpServer-Server-onRequest"><a href="#request事件-Hyperf-HttpServer-Server-onRequest" class="headerlink" title="request事件 [Hyperf\HttpServer\Server, onRequest]"></a>request事件 [Hyperf\HttpServer\Server, onRequest]</h3><p>除了注册该事件，还会触发\Hyperf\HttpServer\Server::initCoreMiddleware</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> public function initCoreMiddleware(string $serverName): void</span><br><span class="line">&#123;</span><br><span class="line">    $this-&gt;serverName = $serverName;</span><br><span class="line">    // 创建内核中间件</span><br><span class="line">    $this-&gt;coreMiddleware = $this-&gt;createCoreMiddleware();</span><br><span class="line">    // 上面这个内核中间件已经初始化了一次，这一行其实没用</span><br><span class="line">    $this-&gt;routerDispatcher = $this-&gt;createDispatcher($serverName);</span><br><span class="line"></span><br><span class="line">    $config = $this-&gt;container-&gt;get(ConfigInterface::class);</span><br><span class="line">    // 初始化配置的中间件</span><br><span class="line">    $this-&gt;middlewares = $config-&gt;get(&#x27;middlewares.&#x27; . $serverName, []);</span><br><span class="line">    // 初始化异常处理器</span><br><span class="line">    $this-&gt;exceptionHandlers = $config-&gt;get(&#x27;exceptions.handler.&#x27; . $serverName, $this-&gt;getDefaultExceptionHandler());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>createCoreMiddleware</strong></p>
+<p>关注点：\Hyperf\HttpServer\Router\DispatcherFactory::__construct</p>
+<blockquote>
+<p>初始化路由的时候，也会顺便把中间件也一起定义了</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 初始化注解路由，即AutoController和Controller</span><br><span class="line">$this-&gt;initAnnotationRoute(AnnotationCollector::list());</span><br><span class="line">// 初始化配置路由</span><br><span class="line">$this-&gt;initConfigRoute();</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>通过配置文件来定义启动什么服务</li>
+<li>初始化路由调度器、中间件，用于请求分发到各个controller</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz">Lihq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz/2022/07/13/php-bin-hyperf-start-what-happend/">https://blog.lihq.xyz/2022/07/13/php-bin-hyperf-start-what-happend/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.lihq.xyz" target="_blank">Lihq - Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/php/">php</a><a class="post-meta__tags" href="/tags/hyperf/">hyperf</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/img/202207/20220713-巨石中的巨石-bing.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#php-bin-hyperf-php-start-%E5%8F%91%E7%94%9F%E4%BA%86%E5%95%A5"><span class="toc-number">1.</span> <span class="toc-text">php bin&#x2F;hyperf.php start 发生了啥</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AA%E8%84%9A%E6%89%8B%E6%9E%B6%E5%90%A7"><span class="toc-number">1.1.</span> <span class="toc-text">先安装一个脚手架吧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%8B%EF%BC%8C%E7%9C%8B%E7%9C%8B%E6%9C%89%E5%95%A5%E5%8F%98%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">先直接运行一下，看看有啥变化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A5%E5%8F%A3%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">入口文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">1.3.1.</span> <span class="toc-text">说明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%B4%E5%AE%9E%E6%97%A0%E5%8D%8E%E7%9A%844%E6%AD%A5%E8%B5%B0"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">朴实无华的4步走</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hyperf-Di-ClassLoader-init-di%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.4.</span> <span class="toc-text">Hyperf\Di\ClassLoader::init() di加载器初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E7%9C%8B%E7%BB%86%E8%8A%82%EF%BC%8C%E5%85%88%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.2.</span> <span class="toc-text">不看细节，先看结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E7%9C%8BHyperf-Di-ClassLoader-loadClass"><span class="toc-number">1.4.3.</span> <span class="toc-text">先看Hyperf\Di\ClassLoader@loadClass()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5Proxy-the-composer-class-loader"><span class="toc-number">1.4.4.</span> <span class="toc-text">深入Proxy the composer class loader</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AEcomposer%E7%9A%84%E8%80%81%E8%B7%AF"><span class="toc-number">1.4.4.1.</span> <span class="toc-text">1. 设置composer的老路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8A%A0%E8%BD%BD-env"><span class="toc-number">1.4.4.2.</span> <span class="toc-text">2. 加载 .env</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%8E%B7%E5%8F%96%E9%85%8D%E7%BD%AE%EF%BC%8C%E6%AF%8F%E4%B8%AA%E5%8C%85%E7%9A%84ConfigProvider%E5%92%8Cconfig%E7%9B%AE%E5%BD%95%E4%B8%8B-%E5%90%88%E5%B9%B6%E6%88%90%E4%B8%80%E4%B8%AAHyperf-Di-Annotation-ScanConfig"><span class="toc-number">1.4.4.3.</span> <span class="toc-text">3. 获取配置，每个包的ConfigProvider和config目录下 合并成一个Hyperf\Di\Annotation\ScanConfig</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AF%8F%E4%B8%80%E4%B8%AAConfigProvider%E9%83%BD%E9%9C%80%E8%A6%81%E6%9C%89-invoke%E6%89%8D%E8%83%BD%E7%94%9F%E6%95%88%EF%BC%8C%E4%B9%9F%E5%B0%B1%E6%98%AF%E8%AF%B4%EF%BC%8C%E8%BF%99%E9%87%8C%E5%8F%AF%E4%BB%A5%E5%8E%BB%E6%89%A7%E8%A1%8C%E4%B8%80%E4%BA%9B%E4%B8%9C%E4%B8%9C"><span class="toc-number">1.4.4.3.1.</span> <span class="toc-text">每一个ConfigProvider都需要有__invoke才能生效，也就是说，这里可以去执行一些东东</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%88%E5%B9%B6ConfigProvider%E5%92%8Cconfig%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.4.3.2.</span> <span class="toc-text">合并ConfigProvider和config的配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B0%86%E4%B8%8A%E9%9D%A2%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96-Hyperf-Di-Annotation-ScanConfig"><span class="toc-number">1.4.4.3.3.</span> <span class="toc-text">将上面获取到的数据，初始化\Hyperf\Di\Annotation\ScanConfig</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%B7%BB%E5%8A%A0composer%E7%9A%84ClassMap"><span class="toc-number">1.4.4.4.</span> <span class="toc-text">4. 添加composer的ClassMap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E5%99%A8-Hyperf-Di-Annotation-Scanner"><span class="toc-number">1.4.4.5.</span> <span class="toc-text">4. 初始化注解扫描器\Hyperf\Di\Annotation\Scanner</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E6%89%AB%E6%89%AB%E6%89%AB"><span class="toc-number">1.4.4.6.</span> <span class="toc-text">5. 扫扫扫</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98"><span class="toc-number">1.4.4.6.1.</span> <span class="toc-text">使用缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#fork%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%BF%9B%E8%A1%8C%E6%89%AB%E6%8F%8F"><span class="toc-number">1.4.4.6.2.</span> <span class="toc-text">fork子进程进行扫描</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#scanned-false-%E5%AD%90%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.4.6.3.</span> <span class="toc-text">$scanned &#x3D;&#x3D;&#x3D; false 子进程</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%86%8D%E6%AC%A1%E8%BF%90%E8%A1%8C-this-gt-deserializeCachedScanData-collectors"><span class="toc-number">1.4.4.6.3.1.</span> <span class="toc-text">再次运行$this-&gt;deserializeCachedScanData($collectors);</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-Hyperf-Di-Annotation-AnnotationReader"><span class="toc-number">1.4.4.6.3.2.</span> <span class="toc-text">初始化 \Hyperf\Di\Annotation\AnnotationReader</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84%E5%8F%8D%E5%B0%84%E7%B1%BB"><span class="toc-number">1.4.4.6.3.3.</span> <span class="toc-text">获取所有的反射类</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B8%85%E7%90%86-collectors%E8%A2%AB%E7%A7%BB%E9%99%A4%E7%9A%84class"><span class="toc-number">1.4.4.6.3.4.</span> <span class="toc-text">清理$collectors被移除的class</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B8%85%E7%90%86%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%B1%BB%E6%96%87%E4%BB%B6"><span class="toc-number">1.4.4.6.3.5.</span> <span class="toc-text">清理修改过的类文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%94%B6%E9%9B%86%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="toc-number">1.4.4.6.3.6.</span> <span class="toc-text">收集注解的信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%87%E9%9D%A2"><span class="toc-number">1.4.4.6.3.7.</span> <span class="toc-text">加载配置文件的切面</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E4%BB%A3%E7%90%86%E7%B1%BB"><span class="toc-number">1.4.4.6.3.8.</span> <span class="toc-text">生成代理类</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%89%AB%E6%8F%8F%E7%BC%93%E5%AD%98-scan-cache"><span class="toc-number">1.4.4.6.3.9.</span> <span class="toc-text">生成扫描缓存 scan.cache</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#scanned-true-%E7%88%B6%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.4.4.6.4.</span> <span class="toc-text">$scanned &#x3D;&#x3D;&#x3D; true 父进程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LazyLoader"><span class="toc-number">1.4.5.</span> <span class="toc-text">LazyLoader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%AE%B9%E5%99%A8container"><span class="toc-number">1.5.</span> <span class="toc-text">加载容器container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%BA%90%E5%B7%A5%E5%8E%82"><span class="toc-number">1.5.1.</span> <span class="toc-text">定义源工厂</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%88%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">先看结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#normalizeDefinition-%E8%A7%84%E8%8C%83%E5%8C%96di"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">normalizeDefinition 规范化di</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%86%E8%A7%84%E8%8C%83%E5%8C%96%E7%9A%84di%EF%BC%8C%E6%B3%A8%E5%85%A5%E5%88%B0%E5%AE%B9%E5%99%A8"><span class="toc-number">1.5.1.3.</span> <span class="toc-text">将规范化的di，注入到容器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-%E8%8E%B7%E5%8F%96application"><span class="toc-number">1.6.</span> <span class="toc-text">get 获取application</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#get"><span class="toc-number">1.6.1.</span> <span class="toc-text">get()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#make"><span class="toc-number">1.6.2.</span> <span class="toc-text">make()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ApplicationFactory%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">1.6.3.</span> <span class="toc-text">ApplicationFactory的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">1.6.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Start"><span class="toc-number">1.7.</span> <span class="toc-text">Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE-Hyperf-Server-ServerConfig"><span class="toc-number">1.7.1.</span> <span class="toc-text">服务配置 \Hyperf\Server\ServerConfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%8D%E5%8A%A1-Hyperf-Server-Server-initServers"><span class="toc-number">1.7.2.</span> <span class="toc-text">初始化服务 \Hyperf\Server\Server::initServers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#request%E4%BA%8B%E4%BB%B6-Hyperf-HttpServer-Server-onRequest"><span class="toc-number">1.7.3.</span> <span class="toc-text">request事件 [Hyperf\HttpServer\Server, onRequest]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-number">1.7.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || 'd47f1800b94908515c91d4f7d9e9e13e'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

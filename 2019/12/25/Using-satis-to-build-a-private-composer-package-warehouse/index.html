@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>使用 satis 搭建一个私有的 Composer 包仓库 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用 satis 搭建一个私有的 Composer 包仓库搭建缘由因为国内使用composer的时候，基本上都是用的镜像源，在开发包的时候，完成之后需要进行安装，就会出现一个同步时间差问题，等不及了，就可以先用自己的私有库顶住。当然，有些不公开的包就更需要一个私有的composer仓库了 说动..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "使用 satis 搭建一个私有的 Composer 包仓库",
+  "url": "https://blog.lihq.xyz/2019/12/25/Using-satis-to-build-a-private-composer-package-warehouse/",
+  "image": "https://blog-1256184194.file.myqcloud.com/2019/12/25/7e3c3530e1a49.jpg",
+  "datePublished": "2019-12-25T15:53:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.966Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2019/12/25/Using-satis-to-build-a-private-composer-package-warehouse/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '使用 satis 搭建一个私有的 Composer 包仓库',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2019/12/25/7e3c3530e1a49.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">使用 satis 搭建一个私有的 Composer 包仓库</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">使用 satis 搭建一个私有的 Composer 包仓库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-25T15:53:00.000Z" title="发表于 2019-12-25 23:53:00">2019-12-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.966Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="使用-satis-搭建一个私有的-Composer-包仓库"><a href="#使用-satis-搭建一个私有的-Composer-包仓库" class="headerlink" title="使用 satis 搭建一个私有的 Composer 包仓库"></a>使用 satis 搭建一个私有的 Composer 包仓库</h1><h4 id="搭建缘由"><a href="#搭建缘由" class="headerlink" title="搭建缘由"></a>搭建缘由</h4><p>因为国内使用composer的时候，基本上都是用的镜像源，在开发包的时候，完成之后需要进行安装，就会出现一个同步时间差问题，等不及了，就可以先用自己的私有库顶住。当然，有些不公开的包就更需要一个私有的composer仓库了</p>
+<p>说动手就动手，看了<a target="_blank" rel="noopener" href="https://docs.phpcomposer.com/05-repositories.html#Hosting-your-own">官方文档</a>，提供了好几种自建方法，我这里只是选择了<a target="_blank" rel="noopener" href="https://docs.phpcomposer.com/articles/handling-private-packages-with-satis.html">satis</a>，因为比较简单，哈哈哈</p>
+<h2 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project composer/satis --stability=dev --keep-vcs</span><br></pre></td></tr></table></figure>
+<p>安装完成，会出现一个satis目录</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>satis的配置是通过satis.json进行的，我们在当前目录新建一个satis.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Lihq Private Composer Repository&quot;</span><span class="punctuation">,</span> </span><br><span class="line">  <span class="attr">&quot;homepage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://packagist.test&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;repositories&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git@github.com:lihq1403/think-rbac.git&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;lihq1403/think-rbac&quot;</span><span class="punctuation">:</span><span class="string">&quot;*&quot;</span></span><br><span class="line">   <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;archive&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dist&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;prefix-url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://packagist.test&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h6 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h6><ul>
+<li>name : 仓库的名字，自己定义</li>
+<li>homepage ：仓库的主页地址</li>
+<li>repositories ：需要获取包的路径</li>
+<li>requre ： 指定获取哪些包（require-all:true 代表获取所有包）</li>
+</ul>
+<h6 id="archive-：缓存文件"><a href="#archive-：缓存文件" class="headerlink" title="archive ：缓存文件"></a>archive ：缓存文件</h6><blockquote>
+<p>我们并不希望每次都clone，其实我们也可以缓存在我们的仓库中，这样每次update的时候就只用下载了</p>
+</blockquote>
+<ul>
+<li>directory: 必需要的，表示生成的压缩包存放的目录，会在我们build时的目录中</li>
+<li>format: 压缩包格式, zip（默认） tar</li>
+<li>prefix-url: 下载链接的前缀的Url,默认会从homepage中取</li>
+<li>skip-dev: 默认为假，是否跳过开发分支</li>
+<li>absolute-directory: 绝对目录</li>
+<li>whitelist: 白名单，只下载哪些</li>
+<li>blacklist: 黑名单，不下载哪些</li>
+<li>checksum: 可选，是否验证sha1</li>
+</ul>
+<h3 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php bin/satis build satis.json public/</span><br></pre></td></tr></table></figure>
+<p>执行命令，会生成包的缓存与web应用</p>
+<h3 id="web访问"><a href="#web访问" class="headerlink" title="web访问"></a>web访问</h3><p>配置nginx指向刚刚生成的public就好了</p>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/25/a229bd967e245.png" alt="微信截图_20191225232725.png"></p>
+<p>然后打开上面配置的homepage，看到如下就代表成功啦<br><img src="https://blog-1256184194.file.myqcloud.com/2019/12/25/a336af9832fbf.png" alt="微信截图_20191225232930.png"></p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>我们只需要在项目中，添加本源即可</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;repositories&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;composer&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://packagist.test&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以开开心心的<code>composer update</code>了</p>
+<h2 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h2><h3 id="镜像拉取"><a href="#镜像拉取" class="headerlink" title="镜像拉取"></a>镜像拉取</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull composer/satis</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ps 吐槽。pull的也太慢了吧，以后再尝试了，todo</p>
+</blockquote>
+<h2 id="satis-json详细说明"><a href="#satis-json详细说明" class="headerlink" title="satis.json详细说明"></a>satis.json详细说明</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MY SATIS&quot;</span><span class="punctuation">,</span><span class="comment">//项目名称</span></span><br><span class="line">  <span class="attr">&quot;homepage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://satis.example.work&quot;</span><span class="punctuation">,</span><span class="comment">//项目地址</span></span><br><span class="line">  <span class="attr">&quot;repositories&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="comment">//指定获取包的仓库地址</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vcs&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git@gitlab.example.cn:xx/test.git&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vcs&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git@gitlab.example.cn:xx/weibo.git&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">   <span class="punctuation">&#123;</span></span><br><span class="line"><span class="comment">// 不再拉取packagist.org上的包，可节省大量时间</span></span><br><span class="line">     <span class="attr">&quot;packagist.org&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="comment">//指定可以获取包的版本，存在&quot;require-all&quot;: true设置时将从仓库获取所有相关的依赖包，所以一般不设置。使用&quot;require-all&quot;: true时就不能再从packagist.org上拉取包了，不然satis将会把所有packagist.org上的包都拉取下来</span></span><br><span class="line">    <span class="attr">&quot;xx/test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;*&quot;</span><span class="punctuation">,</span><span class="comment">//尝试从以上两个配置好的仓库与管理员的全局配置中的仓库中拉取</span></span><br><span class="line">    <span class="attr">&quot;laravel/laravel&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5.6.21&quot;</span><span class="punctuation">,</span><span class="comment">//由于以上两个仓库中没有该项目，所以将从管理员的全局配置文件中使用的仓库地址中拉取</span></span><br><span class="line">    <span class="attr">&quot;xx/weibo&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.5.0|1.0.3&quot;</span><span class="comment">//&quot;*&quot;为全部版本，&quot;1.5.0|1.0.3&quot;为1.5.0与1.0.3两个版本</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;archive&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="comment">//镜像缓存设置，该设置会缓存require配置项中各个仓库的代码</span></span><br><span class="line">    <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dist&quot;</span><span class="punctuation">,</span><span class="comment">//缓存目录名称</span></span><br><span class="line">    <span class="attr">&quot;format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tar&quot;</span><span class="punctuation">,</span><span class="comment">//缓存格式</span></span><br><span class="line">    <span class="attr">&quot;prefix-url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://satis.example.work&quot;</span><span class="punctuation">,</span><span class="comment">//下载的前缀不要写成http://satis.example.work/不然链接将会出问题</span></span><br><span class="line">    <span class="attr">&quot;skip-dev&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span><span class="comment">//是否跳过开发版本，一般为true，但我为了方便测试就选择了false</span></span><br><span class="line"><span class="comment">// 其他配置项：absolute-directory: 绝对目录</span></span><br><span class="line"><span class="comment">// whitelist: 白名单，只下载哪些</span></span><br><span class="line"><span class="comment">// blacklist: 黑名单，不下载哪些</span></span><br><span class="line"><span class="comment">// checksum: 可选，是否验证sha1</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="comment">//拉取代码时的配置</span></span><br><span class="line">    <span class="attr">&quot;secure-http&quot;</span><span class="punctuation">:</span><span class="keyword">false</span><span class="punctuation">,</span><span class="comment">//由于公司部分项目的存放地址可能使用http链接，所以此处设置为false</span></span><br><span class="line">    <span class="attr">&quot;github-oauth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="comment">//部分放在github中的项目需要提前配置好token避免拉取时再输入</span></span><br><span class="line">        <span class="attr">&quot;github.com&quot;</span><span class="punctuation">:</span> <span class="string">&quot;83dxxxxxxxxxxx8888888800062&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bitbucket-oauth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;gitlab-oauth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;gitlab-token&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;gitlab.example.cn&quot;</span><span class="punctuation">:</span><span class="string">&quot;zxxxxxxxxxxxQjZT&quot;</span><span class="comment">//公司gitlab的token配置</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;http-basic&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz">Lihq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz/2019/12/25/Using-satis-to-build-a-private-composer-package-warehouse/">https://blog.lihq.xyz/2019/12/25/Using-satis-to-build-a-private-composer-package-warehouse/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.lihq.xyz" target="_blank">Lihq - Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/tools/">tools</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/2019/12/25/7e3c3530e1a49.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-satis-%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E6%9C%89%E7%9A%84-Composer-%E5%8C%85%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">使用 satis 搭建一个私有的 Composer 包仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E7%BC%98%E7%94%B1"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">搭建缘由</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">源码安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.2.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.2.0.0.1.</span> <span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#archive-%EF%BC%9A%E7%BC%93%E5%AD%98%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.2.0.0.2.</span> <span class="toc-text">archive ：缓存文件</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90"><span class="toc-number">1.1.3.</span> <span class="toc-text">生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web%E8%AE%BF%E9%97%AE"><span class="toc-number">1.1.4.</span> <span class="toc-text">web访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.5.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">docker安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">镜像拉取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#satis-json%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-number">1.3.</span> <span class="toc-text">satis.json详细说明</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || '3a53fe52e07f7261ff8b2810b93464d3'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

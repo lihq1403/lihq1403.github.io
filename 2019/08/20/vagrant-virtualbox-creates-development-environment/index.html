@@ -1,0 +1,445 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Vagrant +Virtualbox 打造跨平台开发环境 | Lihq - Blog</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Vagrant +Virtualbox 打造跨平台开发环境 为啥说是跨平台呢，因为这几个工具软件，每个系统都有相应的软件安装。还有一个原因是，作为一名程序员，应该==多多使用Linux嘛==，哈哈哈！！！  安装所需工具 Vagrant Virtualbox Centos7 box   全都下..."><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Vagrant +Virtualbox 打造跨平台开发环境",
+  "url": "https://blog.lihq.xyz/2019/08/20/vagrant-virtualbox-creates-development-environment/",
+  "image": "https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg",
+  "datePublished": "2019-08-20T09:54:00.000Z",
+  "dateModified": "2025-09-18T07:56:12.965Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Lihq",
+      "url": "https://blog.lihq.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/2019/08/20/vagrant-virtualbox-creates-development-environment/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vagrant +Virtualbox 打造跨平台开发环境',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Vagrant +Virtualbox 打造跨平台开发环境</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Vagrant +Virtualbox 打造跨平台开发环境</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-08-20T09:54:00.000Z" title="发表于 2019-08-20 17:54:00">2019-08-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-18T07:56:12.965Z" title="更新于 2025-09-18 15:56:12">2025-09-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Vagrant-Virtualbox-打造跨平台开发环境"><a href="#Vagrant-Virtualbox-打造跨平台开发环境" class="headerlink" title="Vagrant +Virtualbox 打造跨平台开发环境"></a>Vagrant +Virtualbox 打造跨平台开发环境</h1><blockquote>
+<p>为啥说是跨平台呢，因为这几个工具软件，每个系统都有相应的软件安装。还有一个原因是，作为一名程序员，应该==多多使用Linux嘛==，哈哈哈！！！</p>
+</blockquote>
+<h2 id="安装所需工具"><a href="#安装所需工具" class="headerlink" title="安装所需工具"></a>安装所需工具</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.vagrantup.com/">Vagrant</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.virtualbox.org/">Virtualbox</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.centos.org/centos/7/vagrant/x86_64/images/">Centos7 box</a></li>
+</ul>
+<blockquote>
+<p>全都下载最新版本的就好啦，哈哈哈，先将工具都下载好了，后面的事就好办了</p>
+</blockquote>
+<h2 id="安装软件"><a href="#安装软件" class="headerlink" title="安装软件"></a>安装软件</h2><blockquote>
+<p>vagrant + virtualbox 的安装就不说了（so easy），记得vagrant安装完，如果点击yes，会重启电脑的（ps：亲测，貌似不重启也可以使用的）</p>
+</blockquote>
+<h3 id="vagrant-常用命令"><a href="#vagrant-常用命令" class="headerlink" title="vagrant 常用命令"></a>vagrant 常用命令</h3><blockquote>
+<p>先了解一些基本常识 </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vagrant init      # 初始化，生成Vagrantfile</span><br><span class="line"></span><br><span class="line">vagrant up        # 启动虚拟机</span><br><span class="line">vagrant halt      # 关闭虚拟机</span><br><span class="line">vagrant reload    # 重启虚拟机</span><br><span class="line">vagrant ssh       # SSH 至虚拟机</span><br><span class="line">vagrant suspend   # 挂起虚拟机</span><br><span class="line">vagrant resume    # 唤醒虚拟机</span><br><span class="line">vagrant status    # 查看虚拟机运行状态</span><br><span class="line">vagrant destroy   # 销毁当前虚拟机</span><br><span class="line"></span><br><span class="line">#box管理命令</span><br><span class="line">vagrant box list    # 查看本地box列表</span><br><span class="line">vagrant box add     # 添加box到列表</span><br><span class="line">vagrant box remove  # 从box列表移除 </span><br><span class="line"></span><br><span class="line"># 修改了配置需要启动或重启</span><br><span class="line">vagrant provision</span><br><span class="line">vagrant reload --provision</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加box"><a href="#添加box" class="headerlink" title="添加box"></a>添加box</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant box add [box名称] [下载的box文件路径]</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant box add centos7 CentOS-7-x86_64-Vagrant-1907_01.VirtualBox.box</span><br><span class="line">==&gt; box: Box file was not detected as metadata. Adding it directly...</span><br><span class="line">==&gt; box: Adding box &#x27;centos7&#x27; (v0) for provider:</span><br><span class="line">    box: Unpacking necessary files from: file://E:/work/box/CentOS-7-x86_64-Vagrant-1907_01.VirtualBox.box</span><br><span class="line">    box:</span><br><span class="line">==&gt; box: Successfully added box &#x27;centos7&#x27; (v0) for &#x27;virtualbox&#x27;!</span><br></pre></td></tr></table></figure>
+
+<h3 id="box-初始化"><a href="#box-初始化" class="headerlink" title="box 初始化"></a>box 初始化</h3><blockquote>
+<p>新建一个目录，用来保存虚拟机配置文件，以后的操作都是在这里进行了，我这里是E:/work/box/</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant init</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant init</span><br><span class="line">A `Vagrantfile` has been placed in this directory. You are now</span><br><span class="line">ready to `vagrant up` your first virtual environment! Please read</span><br><span class="line">the comments in the Vagrantfile as well as documentation on</span><br><span class="line">`vagrantup.com` for more information on using Vagrant.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vagrantfile-文件小修改"><a href="#Vagrantfile-文件小修改" class="headerlink" title="Vagrantfile 文件小修改"></a>Vagrantfile 文件小修改</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=Vagrantfile%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E">具体配置说明</a></li>
+</ul>
+<blockquote>
+<p>我这里就是改了几个地方</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># box名称修改</span><br><span class="line">config.vm.box = &quot;centos7&quot;</span><br><span class="line"></span><br><span class="line"># 将网络变成私有网络，这样的话，就不需要去做端口转发了，具体ip值的话，建议先去网络共享中心看看网卡是啥，一般是这个：VirtualBox Host-Only Network</span><br><span class="line">config.vm.network &quot;private_network&quot;, ip: &quot;192.168.56.10&quot; </span><br><span class="line"></span><br><span class="line"># 共享目录，主要是放代码的目录，在centos里面会变成777的 (ps:nfs模式的共享磁盘，可以加快共享目录文件读取，需要先vagrant plugin install vagrant-winnfsd)</span><br><span class="line">config.vm.synced_folder &quot;./../www&quot;, &quot;/home/wwwroot&quot;, type: &quot;nfs&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="box-启动"><a href="#box-启动" class="headerlink" title="box 启动"></a>box 启动</h2><blockquote>
+<p>在当前目录启动哦，因为要读取你刚刚修改的Vagrantfile；第一次的话，会比较慢，因为要创建虚拟机，后面启动就很快啦</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant up</span><br><span class="line">Bringing machine &#x27;default&#x27; up with &#x27;virtualbox&#x27; provider...</span><br><span class="line">==&gt; default: Importing base box &#x27;centos7&#x27;...</span><br><span class="line">==&gt; default: Matching MAC address for NAT networking...</span><br><span class="line">==&gt; default: Setting the name of the VM: box_default_1566287914381_38916</span><br><span class="line">==&gt; default: Clearing any previously set network interfaces...</span><br><span class="line">==&gt; default: Preparing network interfaces based on configuration...</span><br><span class="line">    default: Adapter 1: nat</span><br><span class="line">    default: Adapter 2: hostonly</span><br><span class="line">==&gt; default: Forwarding ports...</span><br><span class="line">    default: 22 (guest) =&gt; 2222 (host) (adapter 1)</span><br><span class="line">==&gt; default: Booting VM...</span><br><span class="line">==&gt; default: Waiting for machine to boot. This may take a few minutes...</span><br><span class="line">    default: SSH address: 127.0.0.1:2222</span><br><span class="line">    default: SSH username: vagrant</span><br><span class="line">    default: SSH auth method: private key</span><br><span class="line">    default:</span><br><span class="line">    default: Vagrant insecure key detected. Vagrant will automatically replace</span><br><span class="line">    default: this with a newly generated keypair for better security.</span><br><span class="line">    default:</span><br><span class="line">    default: Inserting generated public key within guest...</span><br><span class="line">    default: Removing insecure key from the guest if it&#x27;s present...</span><br><span class="line">    default: Key inserted! Disconnecting and reconnecting using new SSH key...</span><br><span class="line">==&gt; default: Machine booted and ready!</span><br><span class="line">==&gt; default: Checking for guest additions in VM...</span><br><span class="line">    default: No guest additions were detected on the base box for this VM! Guest</span><br><span class="line">    default: additions are required for forwarded ports, shared folders, host only</span><br><span class="line">    default: networking, and more. If SSH fails on this machine, please install</span><br><span class="line">    default: the guest additions and repackage the box to continue.</span><br><span class="line">    default:</span><br><span class="line">    default: This is not an error message; everything may continue to work properly,</span><br><span class="line">    default: in which case you may ignore this message.</span><br><span class="line">==&gt; default: Configuring and enabling network interfaces...</span><br><span class="line">    default: SSH address: 127.0.0.1:2222</span><br><span class="line">    default: SSH username: vagrant</span><br><span class="line">    default: SSH auth method: private key</span><br><span class="line">==&gt; default: Rsyncing folder: /cygdrive/e/work/box/ =&gt; /vagrant</span><br><span class="line">==&gt; default: Mounting shared folders...</span><br><span class="line">    default: /home/wwwroot =&gt; E:/work/www</span><br><span class="line">Vagrant was unable to mount VirtualBox shared folders. This is usually</span><br><span class="line">because the filesystem &quot;vboxsf&quot; is not available. This filesystem is</span><br><span class="line">made available via the VirtualBox Guest Additions and kernel module.</span><br><span class="line">Please verify that these guest additions are properly installed in the</span><br><span class="line">guest. This is not a bug in Vagrant and is usually caused by a faulty</span><br><span class="line">Vagrant box. For context, the command attempted was:</span><br><span class="line"></span><br><span class="line">mount -t vboxsf -o uid=1000,gid=1000 home_wwwroot /home/wwwroot</span><br><span class="line"></span><br><span class="line">The error output from the command was:</span><br><span class="line"></span><br><span class="line">mount: unknown filesystem type &#x27;vboxsf&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>好像看到不得了的东西，出问题了！！！</p>
+</blockquote>
+<ol>
+<li>不要慌，问题不大</li>
+<li>打开浏览器</li>
+<li>飞快的键入问题”mount: unknown filesystem type ‘vboxsf”</li>
+<li>回车，会发现原来有很多人跟咱们一样，哈哈哈，心理平衡了</li>
+</ol>
+<h3 id="解决-mount-unknown-filesystem-type-‘vboxsf’"><a href="#解决-mount-unknown-filesystem-type-‘vboxsf’" class="headerlink" title="解决 mount: unknown filesystem type ‘vboxsf’"></a>解决 mount: unknown filesystem type ‘vboxsf’</h3><blockquote>
+<p>其实就是缺少了挂载插件，装上就好了</p>
+</blockquote>
+<h6 id="1、我们先关闭虚拟机"><a href="#1、我们先关闭虚拟机" class="headerlink" title="1、我们先关闭虚拟机"></a>1、我们先关闭虚拟机</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant halt</span><br><span class="line">==&gt; default: Attempting graceful shutdown of VM...</span><br></pre></td></tr></table></figure>
+
+<h6 id="2、安装插件"><a href="#2、安装插件" class="headerlink" title="2、安装插件"></a>2、安装插件</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant plugin install vagrant-vbguest</span><br><span class="line">Installing the &#x27;vagrant-vbguest&#x27; plugin. This can take a few minutes...</span><br><span class="line">Installed the plugin &#x27;vagrant-vbguest (0.19.0)&#x27;!</span><br></pre></td></tr></table></figure>
+
+<h6 id="3、再次启动"><a href="#3、再次启动" class="headerlink" title="3、再次启动"></a>3、再次启动</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant up</span><br><span class="line">安装过程略多，此处省略...</span><br><span class="line"></span><br><span class="line">最后没有报错，就启动成功了</span><br></pre></td></tr></table></figure>
+
+<h2 id="进入box"><a href="#进入box" class="headerlink" title="进入box"></a>进入box</h2><blockquote>
+<p>vagrant的box安装好了之后，默认的账号有俩个【vagrant vagrant (普通权限)】【root vagrant (root权限)】</p>
+</blockquote>
+<blockquote>
+<p>启动的时候，有没有发现一行 SSH address: 127.0.0.1:2222 没错，他会自己开启一个本地连接端口的</p>
+</blockquote>
+<h4 id="尝试ssh账号密码"><a href="#尝试ssh账号密码" class="headerlink" title="尝试ssh账号密码"></a>尝试ssh账号密码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -p 2222 root@127.0.0.1</span><br><span class="line">The authenticity of host &#x27;[127.0.0.1]:2222 ([127.0.0.1]:2222)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:sLcP3X75TMzTjmeolLXX7BqpD+Psrq6vU7haTYyM//4.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">Warning: Permanently added &#x27;[127.0.0.1]:2222&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">root@127.0.0.1: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>咦，进不去。不要慌，其实只是因为是新的box，并没有开启ssh密码访问模式，我们换个方式进去</p>
+</blockquote>
+<h4 id="尝试vagrant-ssh"><a href="#尝试vagrant-ssh" class="headerlink" title="尝试vagrant ssh"></a>尝试vagrant ssh</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant ssh</span><br><span class="line">[vagrant@10 ~]$</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>666，进去了，接下里就是开启一下密码访问模式（其实不开也没问题，用ssh密钥去连接就好了，我是出于习惯，所以想开启密码访问）</p>
+</blockquote>
+<h5 id="开启密码模式"><a href="#开启密码模式" class="headerlink" title="开启密码模式"></a>开启密码模式</h5><h6 id="1、打开ssh配置"><a href="#1、打开ssh配置" class="headerlink" title="1、打开ssh配置"></a>1、打开ssh配置</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<h6 id="2、修改内容"><a href="#2、修改内容" class="headerlink" title="2、修改内容"></a>2、修改内容</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PasswordAuthentication no 改为 PasswordAuthentication yes</span><br></pre></td></tr></table></figure>
+
+<h6 id="3、保存退出"><a href="#3、保存退出" class="headerlink" title="3、保存退出"></a>3、保存退出</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:wq</span><br></pre></td></tr></table></figure>
+<h6 id="4、重启ssh"><a href="#4、重启ssh" class="headerlink" title="4、重启ssh"></a>4、重启ssh</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+
+<h4 id="再次尝试ssh账号密码"><a href="#再次尝试ssh账号密码" class="headerlink" title="再次尝试ssh账号密码"></a>再次尝试ssh账号密码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -p 2222 root@127.0.0.1</span><br><span class="line">root@127.0.0.1&#x27;s password:</span><br><span class="line">Last login: Tue Aug 20 08:30:58 2019 from 10.0.2.2</span><br><span class="line">[root@10 ~]#</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>完美！！！</p>
+</blockquote>
+<h2 id="进行box更新"><a href="#进行box更新" class="headerlink" title="进行box更新"></a>进行box更新</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=centos7%E4%BF%AE%E6%94%B9yum%E6%BA%90">第一步当然是修改yum源啦</a></li>
+</ul>
+<p>更新系统：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum -y update</span><br></pre></td></tr></table></figure>
+
+<h2 id="PHP开发环境搭建"><a href="#PHP开发环境搭建" class="headerlink" title="PHP开发环境搭建"></a>PHP开发环境搭建</h2><blockquote>
+<p>我使用过三套方案，各有各的优势，所以我选择宝塔 -.-</p>
+</blockquote>
+<ol>
+<li>nginx/apache php mysql 一个一个编译安装</li>
+<li><a target="_blank" rel="noopener" href="https://lnmp.org/">lnmp一键包</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bt.cn/">宝塔服务器运维面板</a></li>
+</ol>
+<h4 id="宝塔安装"><a href="#宝塔安装" class="headerlink" title="宝塔安装"></a>宝塔安装</h4><blockquote>
+<p>因为我们装的是centos7，所以十分契合宝塔面板</p>
+</blockquote>
+<p>开始漫长的安装之旅</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y wget &amp;&amp; wget -O install.sh http://download.bt.cn/install/install_6.0.sh &amp;&amp; sh install.sh</span><br><span class="line">略...</span><br><span class="line"></span><br><span class="line">Starting Bt-Panel... Bt-Panel (pid 3757 3776) already running</span><br><span class="line">Starting Bt-Tasks... Bt-Tasks (pid 3790) already running</span><br><span class="line">==================================================================</span><br><span class="line">Congratulations! Installed successfully!</span><br><span class="line">==================================================================</span><br><span class="line">Bt-Panel: http://116.18.22.120:8888/0dafbc37</span><br><span class="line">username: c0ryrxbk</span><br><span class="line">password: fde1ff6a</span><br><span class="line">Warning:</span><br><span class="line">If you cannot access the panel,</span><br><span class="line">release the following port (8888|888|80|443|20|21) in the security group</span><br><span class="line">==================================================================</span><br><span class="line">Time consumed: 2 Minute!</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>原来只花了俩分钟，666。接下来，在浏览器上访问这个地址就好了，因为是虚拟机的原因，那个ip地址是不对的，我这里是<a target="_blank" rel="noopener" href="http://192.168.56.10:8888/0dafbc37。输入账号密码，熟悉的画面">http://192.168.56.10:8888/0dafbc37。输入账号密码，熟悉的画面</a></p>
+</blockquote>
+<p><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a6f2d3e1b364f.png" alt="image"></p>
+<blockquote>
+<p>才发现，原来默认的内存这么小，不行，要调大一点 （因为会不能安装mysql的）</p>
+</blockquote>
+<h6 id="修改box内存"><a href="#修改box内存" class="headerlink" title="修改box内存"></a>修改box内存</h6><p>打开Vagrantfile 将这部分开启，内存值的单位是MB，我这里相当于2GB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">config.vm.provider &quot;virtualbox&quot; do |vb|</span><br><span class="line">#   # Display the VirtualBox GUI when booting the machine</span><br><span class="line">#   vb.gui = true</span><br><span class="line">#</span><br><span class="line">#   # Customize the amount of memory on the VM:</span><br><span class="line">#   vb.memory = &quot;1024&quot;</span><br><span class="line">    vb.memory = &quot;2048&quot;</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<h6 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant reload --provision</span><br></pre></td></tr></table></figure>
+
+<h4 id="必要软件安装"><a href="#必要软件安装" class="headerlink" title="必要软件安装"></a>必要软件安装</h4><ul>
+<li>nginx 1.16</li>
+<li>mysql 5.7</li>
+<li>php 7.2</li>
+</ul>
+<blockquote>
+<p>勾选，然后一键安装，贼简单</p>
+</blockquote>
+<h4 id="扩展软件"><a href="#扩展软件" class="headerlink" title="扩展软件"></a>扩展软件</h4><ul>
+<li>PM2管理器</li>
+<li>Redis</li>
+<li>PHP守护</li>
+<li>…</li>
+</ul>
+<blockquote>
+<p>都在软件商店里面，根据自己的需求安装就好啦，安装好软件之后。1、根据自己需要装php扩展 2、根据自己需要，开启一些禁用函数</p>
+</blockquote>
+<h4 id="php扩展"><a href="#php扩展" class="headerlink" title="php扩展"></a>php扩展</h4><ul>
+<li>fileinfo</li>
+<li>redis</li>
+<li>Swoole</li>
+<li>bz2</li>
+<li>…</li>
+</ul>
+<h4 id="php禁用函数"><a href="#php禁用函数" class="headerlink" title="php禁用函数"></a>php禁用函数</h4><ul>
+<li>putenv</li>
+<li>symlink</li>
+<li>proc_ope n</li>
+<li>…</li>
+</ul>
+<h4 id="漫长的安装之旅，都是后台运行的，切出去看个剧吧，哈哈哈"><a href="#漫长的安装之旅，都是后台运行的，切出去看个剧吧，哈哈哈" class="headerlink" title="漫长的安装之旅，都是后台运行的，切出去看个剧吧，哈哈哈"></a>漫长的安装之旅，都是后台运行的，切出去看个剧吧，哈哈哈</h4><p>本次大致耗时情况，仅供参考，肯定是性能越好，安装的越快啦。我这里才1核2G</p>
+<table>
+<thead>
+<tr>
+<th>软件</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nginx-1.16</td>
+<td>159秒</td>
+</tr>
+<tr>
+<td>mysql-5.7</td>
+<td>81秒</td>
+</tr>
+<tr>
+<td>php-7.2</td>
+<td>10秒</td>
+</tr>
+<tr>
+<td>redis-5.0</td>
+<td>77秒</td>
+</tr>
+<tr>
+<td>pm2-2.6</td>
+<td>28秒</td>
+</tr>
+<tr>
+<td>php扩展-fileinfo-72</td>
+<td>24秒</td>
+</tr>
+<tr>
+<td>php扩展-redis-72</td>
+<td>13秒</td>
+</tr>
+<tr>
+<td>php扩展-swoole4-72</td>
+<td>86秒</td>
+</tr>
+<tr>
+<td>php扩展-bz2-72</td>
+<td>3秒</td>
+</tr>
+</tbody></table>
+<h4 id="composer配置"><a href="#composer配置" class="headerlink" title="composer配置"></a>composer配置</h4><blockquote>
+<p>作为一名phper，composer是必须的。安装php的时候，会自己帮我们装上composer的。感谢阿里大大提供镜像源</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/composer">阿里云 Composer 全量镜像</a></li>
+</ul>
+<p>更新自己先：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># composer self-update</span><br><span class="line">Updating to version 1.9.0 (stable channel).</span><br><span class="line">   Downloading (100%)</span><br><span class="line">Use composer self-update --rollback to return to version 1.8.5</span><br></pre></td></tr></table></figure>
+<p>全局更换源：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试开发环境"><a href="#测试开发环境" class="headerlink" title="测试开发环境"></a>测试开发环境</h4><ol>
+<li>网站</li>
+<li>添加站点</li>
+<li>域名，根目录，php版本</li>
+<li>宿主机host文件修改</li>
+<li>访问域名</li>
+<li>bingo，成功</li>
+<li>宝塔的功能还需要自己去实验实验就好了</li>
+</ol>
+<h2 id="box打包"><a href="#box打包" class="headerlink" title="box打包"></a>box打包</h2><blockquote>
+<p>这就是方便之处，只要你配置好了一次，再打包成自己的box镜像，那么下次开箱即用</p>
+</blockquote>
+<p>在开发环境的目录，关闭centos7</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant halt </span><br><span class="line">==&gt; default: Attempting graceful shutdown of VM...</span><br></pre></td></tr></table></figure>
+<p>确认centos7关机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant status</span><br><span class="line">Current machine states:</span><br><span class="line"></span><br><span class="line">default                   poweroff (virtualbox)</span><br><span class="line"></span><br><span class="line">The VM is powered off. To restart the VM, simply run `vagrant up`</span><br></pre></td></tr></table></figure>
+<p>打包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ vagrant package --output centos7-20190820.box</span><br><span class="line">==&gt; default: Clearing any previously set forwarded ports...</span><br><span class="line">==&gt; default: Exporting VM...</span><br><span class="line">==&gt; default: Compressing package to: E:/work/box/centos7-20190820.box</span><br></pre></td></tr></table></figure>
+<p>分发发去给其他人用的时候只需要</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、vagrant box add [box名称] [下载的box文件路径]</span><br><span class="line">2、vagrant init</span><br><span class="line">3、修改Vagrantfile配置</span><br><span class="line">4、vagrant up 开箱即用</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz">Lihq</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.lihq.xyz/2019/08/20/vagrant-virtualbox-creates-development-environment/">https://blog.lihq.xyz/2019/08/20/vagrant-virtualbox-creates-development-environment/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.lihq.xyz" target="_blank">Lihq - Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/tools/">tools</a></div><div class="post-share"><div class="social-share" data-image="https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Vagrant-Virtualbox-%E6%89%93%E9%80%A0%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">Vagrant +Virtualbox 打造跨平台开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">安装所需工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">安装软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vagrant-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.1.</span> <span class="toc-text">vagrant 常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0box"><span class="toc-number">1.3.</span> <span class="toc-text">添加box</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#box-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.3.1.</span> <span class="toc-text">box 初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vagrantfile-%E6%96%87%E4%BB%B6%E5%B0%8F%E4%BF%AE%E6%94%B9"><span class="toc-number">1.3.2.</span> <span class="toc-text">Vagrantfile 文件小修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#box-%E5%90%AF%E5%8A%A8"><span class="toc-number">1.4.</span> <span class="toc-text">box 启动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3-mount-unknown-filesystem-type-%E2%80%98vboxsf%E2%80%99"><span class="toc-number">1.4.1.</span> <span class="toc-text">解决 mount: unknown filesystem type ‘vboxsf’</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1%E3%80%81%E6%88%91%E4%BB%AC%E5%85%88%E5%85%B3%E9%97%AD%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-number">1.4.1.0.0.1.</span> <span class="toc-text">1、我们先关闭虚拟机</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2%E3%80%81%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"><span class="toc-number">1.4.1.0.0.2.</span> <span class="toc-text">2、安装插件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3%E3%80%81%E5%86%8D%E6%AC%A1%E5%90%AF%E5%8A%A8"><span class="toc-number">1.4.1.0.0.3.</span> <span class="toc-text">3、再次启动</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5box"><span class="toc-number">1.5.</span> <span class="toc-text">进入box</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95ssh%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">尝试ssh账号密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95vagrant-ssh"><span class="toc-number">1.5.0.2.</span> <span class="toc-text">尝试vagrant ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E5%AF%86%E7%A0%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.5.0.2.1.</span> <span class="toc-text">开启密码模式</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1%E3%80%81%E6%89%93%E5%BC%80ssh%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.0.2.1.1.</span> <span class="toc-text">1、打开ssh配置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2%E3%80%81%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9"><span class="toc-number">1.5.0.2.1.2.</span> <span class="toc-text">2、修改内容</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3%E3%80%81%E4%BF%9D%E5%AD%98%E9%80%80%E5%87%BA"><span class="toc-number">1.5.0.2.1.3.</span> <span class="toc-text">3、保存退出</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4%E3%80%81%E9%87%8D%E5%90%AFssh"><span class="toc-number">1.5.0.2.1.4.</span> <span class="toc-text">4、重启ssh</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%8D%E6%AC%A1%E5%B0%9D%E8%AF%95ssh%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81"><span class="toc-number">1.5.0.3.</span> <span class="toc-text">再次尝试ssh账号密码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E8%A1%8Cbox%E6%9B%B4%E6%96%B0"><span class="toc-number">1.6.</span> <span class="toc-text">进行box更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.7.</span> <span class="toc-text">PHP开发环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9D%E5%A1%94%E5%AE%89%E8%A3%85"><span class="toc-number">1.7.0.1.</span> <span class="toc-text">宝塔安装</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9box%E5%86%85%E5%AD%98"><span class="toc-number">1.7.0.1.0.1.</span> <span class="toc-text">修改box内存</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%87%8D%E5%90%AF"><span class="toc-number">1.7.0.1.0.2.</span> <span class="toc-text">重启</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BF%85%E8%A6%81%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">1.7.0.2.</span> <span class="toc-text">必要软件安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.7.0.3.</span> <span class="toc-text">扩展软件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#php%E6%89%A9%E5%B1%95"><span class="toc-number">1.7.0.4.</span> <span class="toc-text">php扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#php%E7%A6%81%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">1.7.0.5.</span> <span class="toc-text">php禁用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%AB%E9%95%BF%E7%9A%84%E5%AE%89%E8%A3%85%E4%B9%8B%E6%97%85%EF%BC%8C%E9%83%BD%E6%98%AF%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%EF%BC%8C%E5%88%87%E5%87%BA%E5%8E%BB%E7%9C%8B%E4%B8%AA%E5%89%A7%E5%90%A7%EF%BC%8C%E5%93%88%E5%93%88%E5%93%88"><span class="toc-number">1.7.0.6.</span> <span class="toc-text">漫长的安装之旅，都是后台运行的，切出去看个剧吧，哈哈哈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#composer%E9%85%8D%E7%BD%AE"><span class="toc-number">1.7.0.7.</span> <span class="toc-text">composer配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">1.7.0.8.</span> <span class="toc-text">测试开发环境</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#box%E6%89%93%E5%8C%85"><span class="toc-number">1.8.</span> <span class="toc-text">box打包</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '60c6f77248061e1b2d42',
+      clientSecret: '43652c3d2a62a639e679efaf12d176a7e70a6e45',
+      repo: 'lihq1403.github.io',
+      owner: 'lihq1403',
+      admin: ['lihq1403'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || 'e7894d8521b2c891e137e967b541b99b'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !true) {
+    if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

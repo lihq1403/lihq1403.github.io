@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Lihq - Blog - Lihq</title><meta name="author" content="Lihq,lihqing1403@gmail.com"><meta name="copyright" content="Lihq"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="平时的日志记录，技术分享，个人学习，闲聊杂谈"><script type="application/ld+json"></script><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blog.lihq.xyz/page/4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f019d76492b1609705ace48062327af9";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lihq - Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Lihq - Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://blog-1256184194.file.myqcloud.com/2019/12/23/de81dafa492ea.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Lihq - Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-map-marked-alt"></i><span> 旅游</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/travel/2025%20%E6%97%A5%E6%9C%AC/"><i class="fa-fw fas fa-torii-gate"></i><span> 日本2025</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-comment-dots"></i><span> 摘抄</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/extract/2023/"><span> 2023</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">Lihq - Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/lihq1403" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lihqing1403@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title=""><i class="fas fa-rss"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/2019/08/23/installation-of-docker-practice/" title="Docker实践之安装篇"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/d874fd89e8e4c.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker实践之安装篇"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/08/23/installation-of-docker-practice/" title="Docker实践之安装篇">Docker实践之安装篇</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-08-23T11:53:00.000Z" title="发表于 2019-08-23 19:53:00">2019-08-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="content">[TOC]  由于重新搞了虚拟机，所以docker也要重新安装了  了解docker 百度一下，哈哈哈哈  打开官方文档 版本说明 我们选择：Docker Engine Centos7 Docker EE  安装前 centos7的安装就很简单啦，添加稳定源去yum配置  安装一些必要的系统工具： 1# yum install -y yum-utils device-mapper-persistent-data lvm2 添加软件源信息： 123# yum-config-manager \    --add-repo \    https://download.docker.com/linux/centos/docker-ce.repo 更新 yum 缓存： 1# yum makecache fast  没有yum-config-manager？123# yum install -y yum-utils \  device-mapper-persistent-data \  lvm2  之前装过了，有残留？12345678910# yum remove docker \     ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2019/08/20/vagrant-virtualbox-creates-development-environment/" title="Vagrant +Virtualbox 打造跨平台开发环境"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/c0377af611c74.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vagrant +Virtualbox 打造跨平台开发环境"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/08/20/vagrant-virtualbox-creates-development-environment/" title="Vagrant +Virtualbox 打造跨平台开发环境">Vagrant +Virtualbox 打造跨平台开发环境</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-08-20T09:54:00.000Z" title="发表于 2019-08-20 17:54:00">2019-08-20</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="content">Vagrant +Virtualbox 打造跨平台开发环境 为啥说是跨平台呢，因为这几个工具软件，每个系统都有相应的软件安装。还有一个原因是，作为一名程序员，应该==多多使用Linux嘛==，哈哈哈！！！  安装所需工具 Vagrant Virtualbox Centos7 box   全都下载最新版本的就好啦，哈哈哈，先将工具都下载好了，后面的事就好办了  安装软件 vagrant + virtualbox 的安装就不说了（so easy），记得vagrant安装完，如果点击yes，会重启电脑的（ps：亲测，貌似不重启也可以使用的）  vagrant 常用命令 先了解一些基本常识   12345678910111213141516171819vagrant init      # 初始化，生成Vagrantfilevagrant up        # 启动虚拟机vagrant halt      # 关闭虚拟机vagrant reload    # 重启虚拟机vagrant ssh       # SSH 至虚拟机vagrant suspend   # 挂起虚拟机vagran...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2019/07/29/from-entering-a-url-address-to-displaying-a-page/" title="从输入一个url地址，到展示页面的过程"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/9238c28bb7224.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从输入一个url地址，到展示页面的过程"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/07/29/from-entering-a-url-address-to-displaying-a-page/" title="从输入一个url地址，到展示页面的过程">从输入一个url地址，到展示页面的过程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-07-29T01:00:00.000Z" title="发表于 2019-07-29 09:00:00">2019-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="content"> 1.浏览器向 DNS 服务器（本地hosts优先）请求解析该 URL 中的域名所对应的 IP 地址; 2.建立TCP连接（三次握手）; 3.浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 TCP 三次握手的第三个报文的数据发送给服务器; 4.服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器; 5.浏览器将该 html 文本并显示内容; 6.释放 TCP连接（四次挥手）;  </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2019/07/12/think-rbac/" title="think-rbac"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/731643384dfb6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="think-rbac"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/07/12/think-rbac/" title="think-rbac">think-rbac</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-07-12T06:56:00.000Z" title="发表于 2019-07-12 14:56:00">2019-07-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E4%BA%AB/">分享</a></span></div><div class="content">thinkphp5.1的rbac权限控制系统 基于mysql世上本无轮子，造的人多了，也就有了车子本来是想找一个第三方包的，但是找来找去，没找到适合我那个项目的，所以就模仿了一下各类大佬编写的rbac组件 具体情况的话，可以看看下面的github说明 这几天把包放进了公司的一个新开项目里面，感觉还不错，再用段时间看看，哈哈哈源码地址        链接地址：think-rbac </div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2019/07/11/what-littleknown-but-interesting-websites-are-there/" title="【转载】有哪些鲜为人知，但是很有意思的网站"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/cd5458ed918fc.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转载】有哪些鲜为人知，但是很有意思的网站"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/07/11/what-littleknown-but-interesting-websites-are-there/" title="【转载】有哪些鲜为人知，但是很有意思的网站">【转载】有哪些鲜为人知，但是很有意思的网站</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-07-11T09:00:00.000Z" title="发表于 2019-07-11 17:00:00">2019-07-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BD%AC%E8%BD%BD/">转载</a></span></div><div class="content">原文地址：有哪些鲜为人知，但是很有意思的网站？ </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2019/06/28/this-man-is-lazy/" title="这个人很懒"><img class="post-bg" src="https://blog-1256184194.file.myqcloud.com/2019/12/23/beaca7229d9c5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="这个人很懒"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/06/28/this-man-is-lazy/" title="这个人很懒">这个人很懒</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-06-28T10:11:00.000Z" title="发表于 2019-06-28 18:11:00">2019-06-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%97%B2%E8%81%8A/">闲聊</a></span></div><div class="content">哈哈哈，很久之前就想要写博客 所以是为啥现在才有呢 别问，问就是懒 一起加油呀，各位！ </div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog-1256184194.file.myqcloud.com/2019/12/23/a34b7b13cd5d8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Lihq</div><div class="author-info-description">平时的日志记录，技术分享，个人学习，闲聊杂谈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/lihq1403"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/lihq1403" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lihqing1403@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title=""><i class="fas fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">大家一起加油啊！！！ 共勉 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/29/informal-essay/" title="随笔"><img src="https://blog-1256184194.file.myqcloud.com/img/202307/20230728-美丽的蓝色岛屿-bing.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="随笔"/></a><div class="content"><a class="title" href="/2023/07/29/informal-essay/" title="随笔">随笔</a><time datetime="2023-07-28T19:30:00.000Z" title="发表于 2023-07-29 03:30:00">2023-07-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/22/tips-for-permission-design-bitwise-operations/" title="权限设计小技巧 - 位运算"><img src="https://blog-1256184194.file.myqcloud.com/img/202304/ProcidaItaly_ZH-CN7712975930_UHD.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="权限设计小技巧 - 位运算"/></a><div class="content"><a class="title" href="/2023/04/22/tips-for-permission-design-bitwise-operations/" title="权限设计小技巧 - 位运算">权限设计小技巧 - 位运算</a><time datetime="2023-04-22T07:00:00.000Z" title="发表于 2023-04-22 15:00:00">2023-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/26/ant-webshell/" title="通过一句话木马来看PHP的一些危操作"><img src="https://blog-1256184194.file.myqcloud.com/img/202211/20221125-科雷兹的宝石-bing.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过一句话木马来看PHP的一些危操作"/></a><div class="content"><a class="title" href="/2022/11/26/ant-webshell/" title="通过一句话木马来看PHP的一些危操作">通过一句话木马来看PHP的一些危操作</a><time datetime="2022-11-26T07:00:00.000Z" title="发表于 2022-11-26 15:00:00">2022-11-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/27/look-yield/" title="看看yield"><img src="https://blog-1256184194.file.myqcloud.com/img/202210/20221027-一个吻和一声叹息-bing.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="看看yield"/></a><div class="content"><a class="title" href="/2022/10/27/look-yield/" title="看看yield">看看yield</a><time datetime="2022-10-27T15:00:00.000Z" title="发表于 2022-10-27 23:00:00">2022-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/07/202210-national-day/" title="国庆"><img src="https://blog-1256184194.file.myqcloud.com/img/202210/20221007-英国中部最美丽的风景-bing.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="国庆"/></a><div class="content"><a class="title" href="/2022/10/07/202210-national-day/" title="国庆">国庆</a><time datetime="2022-10-07T15:00:00.000Z" title="发表于 2022-10-07 23:00:00">2022-10-07</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PHP/"><span class="card-category-list-name">PHP</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E4%BA%AB/"><span class="card-category-list-name">分享</span><span class="card-category-list-count">27</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E4%BA%AB/%E8%BD%AC%E8%BD%BD/"><span class="card-category-list-name">转载</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%BD%AC%E8%BD%BD/"><span class="card-category-list-name">转载</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%97%B2%E8%81%8A/"><span class="card-category-list-name">闲聊</span><span class="card-category-list-count">4</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/fix-bug/" style="font-size: 1.1em; color: #999">fix bug</a> <a href="/tags/tools/" style="font-size: 1.42em; color: #99a6b7">tools</a> <a href="/tags/hyperf/" style="font-size: 1.18em; color: #999ca1">hyperf</a> <a href="/tags/thinkphp/" style="font-size: 1.18em; color: #999ca1">thinkphp</a> <a href="/tags/workerman/" style="font-size: 1.1em; color: #999">workerman</a> <a href="/tags/docker/" style="font-size: 1.34em; color: #99a3b0">docker</a> <a href="/tags/php/" style="font-size: 1.5em; color: #99a9bf">php</a> <a href="/tags/life/" style="font-size: 1.26em; color: #999fa8">life</a> <a href="/tags/web/" style="font-size: 1.26em; color: #999fa8">web</a> <a href="/tags/composer/" style="font-size: 1.1em; color: #999">composer</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/07/">
+            <span class="card-archive-list-date">
+              七月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/04/">
+            <span class="card-archive-list-date">
+              四月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/11/">
+            <span class="card-archive-list-date">
+              十一月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/10/">
+            <span class="card-archive-list-date">
+              十月 2022
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/07/">
+            <span class="card-archive-list-date">
+              七月 2022
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/06/">
+            <span class="card-archive-list-date">
+              六月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2021/06/">
+            <span class="card-archive-list-date">
+              六月 2021
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2021/01/">
+            <span class="card-archive-list-date">
+              一月 2021
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">36</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-09-18T09:02:01.675Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2025 By Lihq</span></div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/img/icp.png"><span>粤ICP备19004202号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["相聚有时&#44;后会无期","Sometimes Ever&#44;Sometimes Never"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  fetch('https://v1.hitokoto.cn')
+    .then(response => response.json())
+    .then(data => {
+      const from = '出自 ' + data.from
+      typedJSFn.processSubtitle(data.hitokoto, [from])
+    })
+    .catch(err => {
+      console.error('Failed to get the Hitokoto API:', err)
+      typedJSFn.processSubtitle(["相聚有时&#44;后会无期","Sometimes Ever&#44;Sometimes Never"])
+    })
+}
+typedJSFn.run(subtitleType)
+</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
