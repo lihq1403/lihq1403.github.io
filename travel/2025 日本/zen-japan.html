@@ -1,0 +1,777 @@
+<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 日本之旅 - 侘寂美学</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Zen+Kurenaido&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fafafa 0%, #f8f8f8 50%, #f5f5f5 100%);
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 300;
+            color: #2a2a2a;
+            line-height: 1.8;
+            writing-mode: horizontal-tb;
+            position: relative;
+        }
+
+        /* 墨迹装饰 - 唯一的装饰元素 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 15%;
+            right: 8%;
+            width: 3px;
+            height: 35vh;
+            background: linear-gradient(to bottom, 
+                rgba(40, 40, 40, 0) 0%,
+                rgba(40, 40, 40, 0.1) 10%,
+                rgba(40, 40, 40, 0.3) 30%,
+                rgba(40, 40, 40, 0.5) 50%,
+                rgba(40, 40, 40, 0.3) 70%,
+                rgba(40, 40, 40, 0.1) 90%,
+                rgba(40, 40, 40, 0) 100%);
+            border-radius: 1.5px;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        /* 印章装饰 */
+        body::after {
+            content: '旅';
+            position: fixed;
+            bottom: 12%;
+            left: 6%;
+            font-size: 1.2rem;
+            font-family: 'Zen Kurenaido', serif;
+            color: rgba(139, 69, 19, 0.3);
+            writing-mode: vertical-rl;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 5vh 8% 10vh 8%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 主标题区域 */
+        .header {
+            text-align: left;
+            margin: 12vh 0 15vh 0;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: #1a1a1a;
+            letter-spacing: 0.1em;
+            writing-mode: horizontal-tb;
+            margin-bottom: 2vh;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out 0.5s forwards;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-left: 0.5rem;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out 1.5s forwards;
+        }
+
+        .date-info {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.85rem;
+            color: #888;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out 2.5s forwards;
+        }
+
+        /* 内容区域 */
+        .content-section {
+            margin: 20vh 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            margin-bottom: 8vh;
+            position: relative;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out forwards;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1vh;
+            left: 0;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, rgba(100, 100, 100, 0.4), transparent);
+        }
+
+        /* 行程项目 */
+        .journey-item {
+            margin: 8vh 0;
+            padding-left: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out forwards;
+        }
+
+        .journey-item:nth-child(2) { animation-delay: 0.5s; }
+        .journey-item:nth-child(3) { animation-delay: 1s; }
+        .journey-item:nth-child(4) { animation-delay: 1.5s; }
+        .journey-item:nth-child(5) { animation-delay: 2s; }
+
+        .journey-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 4px;
+            height: 4px;
+            background: rgba(100, 100, 100, 0.3);
+            border-radius: 50%;
+        }
+
+        .journey-date {
+            font-size: 0.8rem;
+            color: #999;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .journey-title {
+            font-size: 1rem;
+            color: #2a2a2a;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .journey-desc {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.9;
+            letter-spacing: 0.02em;
+            max-width: 70%;
+        }
+
+        /* 详细信息样式 */
+        .detail-info {
+            display: block;
+            margin-top: 2rem;
+            padding: 1rem 0;
+            font-size: 0.75rem;
+            color: #888;
+            border-top: 1px solid rgba(150, 150, 150, 0.15);
+            font-style: italic;
+            letter-spacing: 0.05em;
+            line-height: 1.7;
+        }
+
+        /* 预算信息 */
+        .budget-info {
+            margin: 25vh 0 15vh 0;
+            text-align: right;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out 3s forwards;
+        }
+
+        .budget-title {
+            font-size: 0.9rem;
+            color: #555;
+            letter-spacing: 0.1em;
+            margin-bottom: 2vh;
+        }
+
+        .budget-amount {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 1vh;
+        }
+
+        .budget-desc {
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 0.08em;
+        }
+
+        /* 底部信息 */
+        .footer {
+            margin-top: 30vh;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeInSlow 2s ease-out 4s forwards;
+        }
+
+        .zen-quote {
+            font-size: 0.8rem;
+            color: #777;
+            letter-spacing: 0.15em;
+            writing-mode: horizontal-tb;
+            position: relative;
+        }
+
+        .zen-quote::before,
+        .zen-quote::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(120, 120, 120, 0.3), transparent);
+        }
+
+        .zen-quote::before {
+            left: -80px;
+        }
+
+        .zen-quote::after {
+            right: -80px;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInSlow {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 滚动时的微妙视差效果 */
+        .parallax-element {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 8vh 6% 12vh 6%;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+                writing-mode: horizontal-tb;
+            }
+            
+            .date-info {
+                position: relative;
+                writing-mode: horizontal-tb;
+                text-align: left;
+                margin-top: 3vh;
+                transform: none;
+            }
+            
+            .journey-desc {
+                max-width: 95%;
+            }
+            
+            .detail-info {
+                margin-top: 1.5rem;
+                padding: 0.8rem 0;
+                font-size: 0.7rem;
+            }
+            
+            .zen-quote::before,
+            .zen-quote::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 6vh 4% 10vh 4%;
+            }
+        }
+
+        /* 极简滚动条 */
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(150, 150, 150, 0.2);
+            border-radius: 1px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(150, 150, 150, 0.3);
+        }
+
+        /* 选中文本颜色 */
+        ::selection {
+            background: rgba(100, 100, 100, 0.1);
+            color: #2a2a2a;
+        }
+
+        ::-moz-selection {
+            background: rgba(100, 100, 100, 0.1);
+            color: #2a2a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container parallax-element">
+        <!-- 标题区域 -->
+        <header class="header">
+            <h1 class="main-title">日本之旅</h1>
+            <p class="subtitle">さくら咲く国への憧れ</p>
+            <div class="date-info">
+                二〇二五年<br>
+                十月四日<br>
+                至<br>
+                十月十一日
+            </div>
+        </header>
+
+        <!-- 航班信息 -->
+        <section class="content-section">
+            <h2 class="section-title">启程</h2>
+            <div class="journey-item">
+                <div class="journey-date">十月四日 午前</div>
+                <div class="journey-title">关西国际机场 抵达</div>
+                <div class="journey-desc">秋风起时，踏上关西大地。机场至难波，南海电铁载我入城。道顿堀的夜，霓虹如梦。</div>
+            </div>
+        </section>
+
+        <!-- 主要行程 -->
+        <section class="content-section">
+            <h2 class="section-title">行程</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">十月五日 周六</div>
+                <div class="journey-title">环球影城 · 幻想与现实</div>
+                <div class="journey-desc">
+                    晨起八时，梦咲线载我至环球城。任天堂世界里，马里奥的城堡在晨光中闪烁。需得整理券方可入内，如古时求见天子般庄重。<br><br>
+                    哈利波特的魔法世界，霍格沃茨城堡巍峨矗立。禁忌之旅中穿梭时空，如庄周梦蝶，不知何为真实。奥利凡德魔杖店里，挑选命中注定的那根魔杖。<br><br>
+                    <span class="detail-info">入园券八千四百円，快速券七千八至一万五千八百円。开园前一小时抵达，方不负此行。</span>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月六日 周日</div>
+                <div class="journey-title">大阪城下 · 古韵今风</div>
+                <div class="journey-desc">
+                    晨九时至大阪城公园。天守阁八层楼阁，如登云梯，可望远山如黛。六百円入内，历史在此凝固成永恒。西之丸庭园里，十月红叶初现，秋意渐浓。<br><br>
+                    午后二时至四天王寺，圣德太子所建古刹，一千四百年香火不断。三百円礼佛，聆听五重塔下的钟声悠扬。金堂内佛像庄严，讲堂中梵音袅袅。<br><br>
+                    黄昏时分，通天阁下新世界。一千円登塔望远，俯瞰大阪万家灯火。比利肯神前许愿，摸其足底求好运。串炸店里品尝百年传统，记得切勿二次蘸酱。<br><br>
+                    <span class="detail-info">交通：难波乘地铁御堂筋线至本町，转中央线至森之宫，约二十分钟，二百三十円。</span>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月七日 周一</div>
+                <div class="journey-title">镰仓古都 · 武士精神</div>
+                <div class="journey-desc">
+                    清晨七时半退房，新大阪站候车。八时五十二分，光号新干线如离弦之箭，穿越本州脊梁。二小时四十分后，新横滨站下车，一万三千三百二十円换得此程风景。<br><br>
+                    转乘横须贺线，五百八十円至镰仓。古都在秋日暖阳中苏醒，鹤冈八幡宫参道石阶如天梯，武士精神在此永存。小町通五百米古街，和菓子香甜，传统工艺品琳琅满目。<br><br>
+                    午后四时半，江之岛电铁至长谷，二百円一段悠然旅程。高德院内镰仓大佛，三百円入内瞻仰，青铜佛像高十三点三五米，重一百二十一吨。可花二十円入内参观，体验佛心广大。<br><br>
+                    黄昏时分，长谷寺四百円入内。观音菩萨慈悲庄严，日式花园幽深静谧。虽紫阳花已谢，但秋日红叶正浓，别有一番韵味。<br><br>
+                    夜九时半，横须贺线返东京，一小时十五分后抵达新宿，九百一十八円。入住涩谷附近，准备东京三日探索。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月八日 周二</div>
+                <div class="journey-title">东京都心 · 现代与传统</div>
+                <div class="journey-desc">
+                    晨九时至涩谷，世界最繁忙十字路口，每次绿灯三千人如潮水般穿行。忠犬八公像前驻足，感怀忠义不移的精神。涩谷SKY观景台，一千八百円登高俯瞰，都市景观尽收眼底。<br><br>
+                    正午时分，星巴克涩谷十字路口店品咖啡，透过玻璃窗观人潮汹涌如梦。涩谷109、CENTER GAI购物街里，青春气息扑面而来。<br><br>
+                    午后二时步行至原宿，仅十五分钟路程。竹下通四百米步行街，日本青少年流行文化发源地。五彩斑斓的商店里，独特时尚与配饰琳琅满目。彩虹棉花糖、可丽饼，甜腻中带着青春的味道。<br><br>
+                    四时参拜明治神宫，东京最重要神社，免费入内。七十万平方米都市森林中，古木参天遮日。或有幸见传统神道婚礼，白无垢下的庄严美丽。<br><br>
+                    黄昏六时，表参道购物大道闲逛。记得涩谷新规：夜六时至晨五时禁止街头饮酒，当在室内餐厅享用美食。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月九日 周三</div>
+                <div class="journey-title">东京地标 · 古韵新章</div>
+                <div class="journey-desc">
+                    晨九时至浅草，雷门巨大红灯笼在朝阳中庄严。仲见世商店街五百五十米，传统纪念品与小食琳琅满目。浅草寺东京最古老寺庙，建于六二八年，免费参拜。本堂前投币祈福，抽签问前程，体验传统文化。<br><br>
+                    午前十一时半，雷おこし雷米花，人形烧香甜，品尝江户风味。朝日啤酒大厦可选参观，了解日本酒文化。<br><br>
+                    午后二时前往东京塔，三百三十三米红白钢塔，昭和三十三年建成至今仍为东京象征。主展望台一楼五十米，一千二百円；特别展望台二百五十米，三千円需预约，三百六十度俯瞰东京全景。<br><br>
+                    五时至增上寺，德川家族菩提寺，建于一三九三年。红色三解脱门乃国家重要文化财产，与背景东京塔形成古今对比，绝美画面。<br><br>
+                    夜六时半至银座，亚洲香榭丽舍大道。高级寿司店数寄屋桥次郎（需提前预约），或选其他寿司店体验江户前寿司精髓。银座购物区世界顶级品牌云集，夜景璀璨如星河。<br><br>
+                    <span class="detail-info">交通：浅草乘银座线至新桥，转都营三田线至御成门，约三十分钟可达东京塔。</span>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月十日 周四</div>
+                <div class="journey-title">东京自在 · 随心所欲</div>
+                <div class="journey-desc">
+                    此日可依个人兴趣自由选择：<br><br>
+                    <strong>选择甲：现代东京探索</strong><br>
+                    上野公园东京最大公园，秋季银杏叶正黄。东京国立博物馆六百二十円入内，日本最大博物馆，文物珍藏丰富。秋叶原电器街，动漫文化中心，御宅族圣地。东京站地下商店街，便当天堂，各色美食应有尽有。<br><br>
+                    <strong>选择乙：自然与艺术</strong><br>
+                    新宿御苑五十八万平方米日式庭园，四季花卉，都市绿洲。六本木Hills森美术馆加城市观景台，现代艺术中心。台场人工岛上，彩虹大桥横跨海湾，丰田汽车馆展示未来科技。东京晴空塔六百三十四米，世界第二高塔，可选参观。<br><br>
+                    <strong>选择丙：近郊一日游</strong><br>
+                    箱根温泉胜地，富士山景观绝佳，往返三小时，温泉体验三千至八千円。日光世界遗产东照宫，华严瀑布壮观，往返四小时。河口湖富士五湖之一，最佳富士山观景点。川越小江户，保留江户时代街景，怀旧之旅。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">十月十一日 周五</div>
+                <div class="journey-title">归途 · 离别在即</div>
+                <div class="journey-desc">
+                    晨九时最后购物时光。新宿伊势丹、高岛屋百货，精品云集。池袋动漫商店街，御宅文化深度体验。<br><br>
+                    经典伴手礼必购：白色恋人北海道巧克力夹心饼干，Tokyo Banana东京香蕉蛋糕，Kit-Kat限定口味抹茶樱花，Royce生巧克力入口即化。唐吉诃德二十四小时杂货店，松本清、大国药妆，最后扫货机会。<br><br>
+                    下午四时前往成田机场，捷星航班需提前三小时。成田快线N'EX约六十分钟，三千零七十円，推荐直达T2/T3。或选THE ACCESS NARITA巴士，六十至九十分钟，一千円最经济。京成电铁Skyliner加ACCESS特急，约七十分钟，二千五百七十円。<br><br>
+                    六时抵达成田机场T3，办理登机手续。捷星廉价航空，行李限制严格，务必提前确认规定。T3航站楼设施相对简单，餐饮选择有限，不宜过早到达。<br><br>
+                    夜九时五十分，捷星日本GK043航班起飞。次日凌晨一时五十分抵达，八天七夜日本之旅，至此圆满结束。心中满载美好回忆，如樱花瓣片，永远飘香。<br><br>
+                    <span class="detail-info">重要提醒：廉价航空建议提前三小时到机场，行李超重费用高昂。</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 住宿静修 -->
+        <section class="content-section">
+            <h2 class="section-title">栖息</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">大阪三夜</div>
+                <div class="journey-title">难波心斋桥</div>
+                <div class="journey-desc">
+                    东横INN难波店，八千円一夜，免费早餐与洗衣。距难波站步行三分钟，至道顿堀仅五分钟路程。<br><br>
+                    或选超经济住宿：快活CLUB网吧过夜，一千八至二千五百円，二十四小时营业，免费饮品淋浴。青年旅舍宿舍床位，二千五至三千二百円，社交氛围浓厚。<br><br>
+                    奢华体验：丽思卡尔顿大阪，四万五千円一夜，五星级服务，club lounge与spa，俯瞰大阪全景。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">东京四夜</div>
+                <div class="journey-title">新宿涩谷</div>
+                <div class="journey-desc">
+                    APA Hotel新宿歌舞伎町，九千五百円一夜，新宿站步行八分钟，夜生活便利。<br><br>
+                    经济选择：神保町樱花青旅，三千一百五十至三千八百五十円，地铁三线交汇，国际化氛围。Book And Bed Tokyo新宿，五千八至七千二百円，书店主题胶囊，独特体验。<br><br>
+                    终极奢华：Park Hyatt Tokyo，六万五千円一夜，《迷失东京》拍摄地，顶级奢华无边泳池米其林餐厅。
+                </div>
+            </div>
+        </section>
+
+        <!-- 味觉之旅 -->
+        <section class="content-section">
+            <h2 class="section-title">味蕾</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">大阪美食</div>
+                <div class="journey-title">关西风味</div>
+                <div class="journey-desc">
+                    本家大たこ章鱼烧，六百八十円六个，大阪章鱼烧发源地。千房大阪烧，八百至一千二百円，正宗口味。新世界元祖串炸，一百五十至三百円一串，记得禁止二次蘸酱。<br><br>
+                    蟹道乐巨型螃蟹招牌，午餐四千五至六千八百円，晚餐八千至一万五千円。帝王蟹料理专门店，螃蟹刺身蒸蟹烤蟹应有尽有。<br><br>
+                    米其林三星Koryu，二万五千至三万五千円，怀石料理巅峰，需提前一月预订，只接受日语预订。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">镰仓江之岛</div>
+                <div class="journey-title">海之味</div>
+                <div class="journey-desc">
+                    しらす丼小银鱼丫，一千二百至二千円，镰仓特色生熟选择。江之岛啤酒海景餐厅，二千五至四千円，新鲜海鲜配当地精酿。<br><br>
+                    镰仓可乐饼二百至四百円一个，现炸热乎多种口味。鸽子豆鳩サブレー，一千零八十円九枚装，镰仓百年老铺经典手信。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">东京美食</div>
+                <div class="journey-title">江户风情</div>
+                <div class="journey-desc">
+                    一兰拉面八百九十至一千三百九十円，豚骨拉面个人隔间。回転寿司スシロー一百二十至五百円一盘，高性价比新鲜食材。吉野家松屋牛丼四百至八百円，快餐连锁经典。<br><br>
+                    浅草大黒家天妇罗，创立一八八七年，三千五至六千円，百年老店现炸现吃。新宿思い出横丁昭和风情小巷，三千至五千円，串烧配日本酒。<br><br>
+                    数寄屋桥次郎银座米其林三星，三万至四万円，寿司之神小野二郎，需提前二月预订，仅接受常客介绍。
+                </div>
+            </div>
+        </section>
+
+        <!-- 交通指引 -->
+        <section class="content-section">
+            <h2 class="section-title">路径</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">城际移动</div>
+                <div class="journey-title">铁道纵横</div>
+                <div class="journey-desc">
+                    JR Pass全国版七日券，五万円涨价七成后性价比堪忧。此行程建议单独购票：<br><br>
+                    大阪至新横滨新干线，一万三千三百二十円。新横滨至镰仓，五百八十円。镰仓至东京，九百一十八円。机场交通加市内交通，约一万二千円。合计二万六千八百一十八円，较JR Pass节省二万三千一百八十二円。<br><br>
+                    <span class="detail-info">2025年新规：热门新干线指定席减少，务必提前预订"光号"座位。</span>
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">市内往来</div>
+                <div class="journey-title">地下通途</div>
+                <div class="journey-desc">
+                    大阪：ICOCA卡配大阪周游卡，三千三百円含四十余景点免费及交通。<br><br>
+                    东京：Suica卡配东京Metro二十四小时券，八百円一日通行。镰仓：江之岛镰仓周游券八百円，含江之岛电铁全线。<br><br>
+                    地铁平均票价二百至四百円，建议购买IC卡充值使用，全国通用便利店可充。
+                </div>
+            </div>
+        </section>
+
+        <!-- 禅意贴士 -->
+        <section class="content-section">
+            <h2 class="section-title">心得</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">秋日十月</div>
+                <div class="journey-title">时令提醒</div>
+                <div class="journey-desc">
+                    白日温度十八至二十三度，夜晚十二至十六度。长袖加薄外套，备一厚衣以防降温。秋雨季节，雨具必备。红叶前期，部分地区开始变色，别有韵味。<br><br>
+                    栗子甜品蒙布朗、栗子大福，秋刀鱼刺身当季最肥，柿子和菓子季节限定。川越祭十月第三周末，岸和田だんじり祭十月初。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">礼仪风范</div>
+                <div class="journey-title">文化修养</div>
+                <div class="journey-desc">
+                    电车内保持安静，勿大声通话。垃圾需自行带走，街头垃圾箱稀少。路边全面禁烟，只在指定区域。涩谷等地禁止路边饮酒。日本无小费文化，给小费可能被拒。<br><br>
+                    寺庙参拜：进入前鞠躬，投币鞠躬拍掌许愿再鞠躬。部分寺庙禁止拍照，需注意标识。USJ开园前一小时到达，优先抽任天堂整理券。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">支付方式</div>
+                <div class="journey-title">金钱往来</div>
+                <div class="journey-desc">
+                    日本仍以现金为主，建议携带五万至八万円现金。ICOCA、Suica交通卡全国通用，便利店可充值。消费满五千円可享八成退税，需持护照。<br><br>
+                    支付宝、微信支付在主要商圈逐渐普及。高档餐厅多数接受信用卡，小店仍以现金为主。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">行李提醒</div>
+                <div class="journey-title">轻装简行</div>
+                <div class="journey-desc">
+                    捷星廉航行李限制严格，超重费用高昂。新干线需预订特大行李座位。大阪公交禁止大型行李箱。<br><br>
+                    成田T3航站楼设施简单，餐饮选择有限，不宜过早到达。建议提前三小时到机场，确认行李规定。
+                </div>
+            </div>
+        </section>
+
+        <!-- 特色体验 -->
+        <section class="content-section">
+            <h2 class="section-title">体味</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">温泉汤浴</div>
+                <div class="journey-title">箱根热海</div>
+                <div class="journey-desc">
+                    箱根温泉胜地，富士山景观绝佳，往返三小时。温泉体验三千至八千円，享受天然温泉，洗去一身疲惫。记得彻底清洗身体后入浴，体验日式温泉文化。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">和服体验</div>
+                <div class="journey-title">传统雅致</div>
+                <div class="journey-desc">
+                    镰仓、浅草和服租赁，四千至一万円。秋季推荐选择暖色调和服配秋景，拍照留念。体验传统文化，感受日式美学精髓。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">料理学习</div>
+                <div class="journey-title">匠心独运</div>
+                <div class="journey-desc">
+                    大阪章鱼烧制作课程三千円，学习制作地道美食。寿司制作体验五千至八千円，了解江户前寿司精髓。茶道体验四千至八千円，感受和式文化深度。
+                </div>
+            </div>
+        </section>
+
+        <!-- 预算详解 -->
+        <section class="content-section">
+            <h2 class="section-title">费用</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">超级经济</div>
+                <div class="journey-title">背包客模式</div>
+                <div class="journey-desc">
+                    总预算八万二千八百円，约三千九百七十四元人民币。<br><br>
+                    交通二万七千円，网吧青旅住宿一万五千四百円，便利店快餐一万四千四百円，门票一万八千円，购物八千円。适合极度预算紧张的旅客。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">经济舒适</div>
+                <div class="journey-title">性价比选择</div>
+                <div class="journey-desc">
+                    总预算十万八千円，约五千一百八十四元人民币。<br><br>
+                    交通二万七千円，胶囊旅馆青旅二万八千円，街头小食便利店二万円，门票一万八千円，购物一万五千円。平衡舒适与经济。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">舒适享受</div>
+                <div class="journey-title">品质之旅</div>
+                <div class="journey-desc">
+                    总预算十八万三千円，约八千七百八十四元人民币。<br><br>
+                    交通二万七千円，经济型连锁酒店六万三千円，中档餐厅居酒屋四万円，门票一万八千円，购物三万五千円。舒适品质体验。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">奢华体验</div>
+                <div class="journey-title">极致享受</div>
+                <div class="journey-desc">
+                    总预算三十九万六千円，约一万九千零八元人民币。<br><br>
+                    交通含JR Pass五万円，高档酒店十七万五千円，米其林餐厅九万六千円，门票二万五千円，购物五万円。终极奢华旅行。
+                </div>
+            </div>
+        </section>
+
+        <!-- 预算信息 -->
+        <section class="budget-info">
+            <div class="budget-title">推荐预算</div>
+            <div class="budget-amount">八千八百元</div>
+            <div class="budget-desc">舒适预算 · 含食宿行游购</div>
+        </section>
+
+        <!-- 数字工具 -->
+        <section class="content-section">
+            <h2 class="section-title">工具</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">必备应用</div>
+                <div class="journey-title">数字助手</div>
+                <div class="journey-desc">
+                    Google Maps导航必备，支持中文显示。乗換案内日本交通换乘查询，准确可靠。Google Translate翻译神器，拍照翻译菜单功能实用。<br><br>
+                    Tabelog食べログ日本最权威美食点评。USJ官方APP环球影城专用，查看等待时间。Booking.com、Agoda酒店预订比价。OpenTable高档餐厅预订平台。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">紧急联系</div>
+                <div class="journey-title">安全守护</div>
+                <div class="journey-desc">
+                    日本急救电话一一九（消防急救），警察一一零。中国驻日本大使馆：+81-3-3403-3388。游客热线：+81-50-3816-2787。<br><br>
+                    确认护照有效期六个月以上，购买旅行保险。携带护照复印件，记录重要电话号码。
+                </div>
+            </div>
+        </section>
+
+        <!-- 出发准备 -->
+        <section class="content-section">
+            <h2 class="section-title">准备</h2>
+            
+            <div class="journey-item">
+                <div class="journey-date">行前清单</div>
+                <div class="journey-title">万事俱备</div>
+                <div class="journey-desc">
+                    确认护照有效期六个月以上。购买旅行保险保障安全。预订酒店建议提前一至二个月。换取日元现金五万至八万円。<br><br>
+                    下载必备APP：Google Maps、翻译工具、交通应用。确认航班行李规定，捷星航空限制严格。准备日文过敏信息卡片，素食需求特别注意。
+                </div>
+            </div>
+
+            <div class="journey-item">
+                <div class="journey-date">抵达事项</div>
+                <div class="journey-title">初来乍到</div>
+                <div class="journey-desc">
+                    购买ICOCA或Suica交通卡，全国通用。领取免费WiFi或购买上网卡保持联络。确认酒店位置和交通路线。<br><br>
+                    购买USJ门票建议提前网上预订。了解当地礼仪风范，尊重传统文化。保持开放心态，享受旅行乐趣。
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部 -->
+        <footer class="footer">
+            <p class="zen-quote">一期一会</p>
+        </footer>
+    </div>
+
+    <script>
+        // 极简的视差滚动效果
+        let ticking = false;
+        
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.parallax-element');
+            
+            parallaxElements.forEach(element => {
+                const speed = 0.02;
+                const yPos = -(scrolled * speed);
+                element.style.transform = `translateY(${yPos}px)`;
+            });
+            
+            ticking = false;
+        }
+        
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+        
+        // 节流的滚动监听
+        window.addEventListener('scroll', requestTick);
+        
+        // 页面加载完成后的渐入效果
+        window.addEventListener('load', () => {
+            document.body.style.opacity = 1;
+        });
+        
+        // 鼠标移动时的微妙墨迹效果
+        let lastMove = Date.now();
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastMove > 100) { // 节流
+                const ink = document.querySelector('body::before');
+                if (ink) {
+                    const x = (e.clientX / window.innerWidth) * 100;
+                    const opacity = Math.max(0.3, Math.min(0.7, x / 100));
+                    document.documentElement.style.setProperty('--ink-opacity', opacity);
+                }
+                lastMove = now;
+            }
+        });
+    </script>
+</body>
+</html>
